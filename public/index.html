@@ -550,13 +550,13 @@ function mapIGDaily(rows){
   return rows.map(function(r){
     return{
       date:r.date,
-      views:Number(r.video_views_count||0),
+      views:Number(r.views||0),
       likes:Number(r.likes||0),
       comments:Number(r.comments||0),
       shares:Number(r.shares||0),
       saves:Number(r.saves||0),
       reach:Number(r.reach||0),
-      follower_count:Number(r.followers_count||0),
+      follower_count:Number(r.follower_count||0),
       reposts:Number(r.reposts||0)
     };
   });
@@ -564,16 +564,17 @@ function mapIGDaily(rows){
 function mapIGPosts(rows){
   return rows.map(function(r){
     return{
-      cap:r.caption||'(tanpa caption)',
-      views:Number(r.video_views_count||0),
-      lk:Number(r.video_likes||0),
-      cm:Number(r.video_comments||0),
-      sv:Number(r.saves||0),
-      sh:Number(r.video_shares||0),
-      reach:Number(r.reach||0),
-      eng:Number(r.video_likes||0)+Number(r.video_comments||0)+Number(r.video_shares||0)+Number(r.saves||0),
+      cap:r.media_caption||'(tanpa caption)',
+      views:Number(r.media_views||0),
+      lk:Number(r.media_like_count||0),
+      cm:Number(r.media_comments_count||0),
+      sv:Number(r.media_saved||0),
+      sh:Number(r.media_shares||0),
+      reach:Number(r.media_reach||0),
+      eng:Number(r.media_like_count||0)+Number(r.media_comments_count||0)+Number(r.media_shares||0)+Number(r.media_saved||0),
       aw:0,
-      type:(r.media_type||'FEED').toUpperCase().indexOf('REEL')>-1?'REELS':'FEED'
+      type:(r.media_type||'FEED').toUpperCase().indexOf('REEL')>-1?'REELS':(r.media_type||'').toUpperCase().indexOf('VIDEO')>-1?'REELS':'FEED',
+      thumb:r.media_thumbnail_url||''
     };
   });
 }

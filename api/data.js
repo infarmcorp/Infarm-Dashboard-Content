@@ -22,10 +22,9 @@ export default async function handler(req, res) {
     },
     instagram: {
       datasource: 'instagram',
-      // NOTE: field id Instagram belum diverifikasi langsung dari get_fields('instagram').
-      // Kalau ada error "field not found" dari Windsor, sesuaikan nama field di bawah ini.
-      dailyFields: ['likes', 'comments', 'shares', 'saves', 'reach', 'followers_count', 'reposts', 'video_views_count'],
-      contentFields: ['caption', 'video_views_count', 'video_likes', 'video_comments', 'video_shares', 'saves', 'reach', 'media_type'],
+      // Field id sudah diverifikasi dari Windsor.ai get_fields('instagram')
+      dailyFields: ['likes', 'comments', 'shares', 'saves', 'reach', 'follower_count', 'reposts', 'views'],
+      contentFields: ['media_caption', 'media_views', 'media_like_count', 'media_comments_count', 'media_shares', 'media_saved', 'media_reach', 'media_type', 'media_thumbnail_url'],
     },
   };
 
