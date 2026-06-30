@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infarm Social Media Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{--bg:#0f0f0f;--sf:#1a1a1a;--sf2:#222;--sf3:#2a2a2a;--br:rgba(255,255,255,.08);--br2:rgba(255,255,255,.14);--tx:#f0f0f0;--tx2:#a0a0a0;--tx3:#606060;--gn:#00d68f;--am:#ffb800;--bl:#4da3ff;--pu:#9b6dff;--rd:#ff4d4d;--r:10px;--rs:6px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;line-height:1.5}
+.layout{display:flex;min-height:100vh}
+.sb{width:220px;flex-shrink:0;background:var(--sf);border-right:1px solid var(--br);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:16px;border-bottom:1px solid var(--br)}
+.sb-ic{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.psw{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--sf2);padding:3px;border-radius:7px;border:1px solid var(--br);margin:8px 8px 4px}
+.psb{padding:6px 2px;border-radius:5px;border:none;background:transparent;color:var(--tx3);font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;font-family:inherit;line-height:1.2}
+.psb.on{background:#ff2d55;color:#fff}
+.psb.ig-on{background:linear-gradient(135deg,#833AB4,#E1306C);color:#fff}
+.ns{padding:10px 10px 3px;font-size:10px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 10px;margin:1px 6px;border-radius:var(--rs);cursor:pointer;color:var(--tx2);font-size:12px;border:none;background:none;width:calc(100% - 12px);text-align:left;transition:all .15s;font-family:inherit;position:relative}
+.ni:hover{background:var(--sf2);color:var(--tx)}
+.ni.on{background:rgba(255,45,85,.12);color:#ff2d55;font-weight:500}
+.ni.on.ig{background:rgba(225,48,108,.12);color:#E1306C}
+.nb{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:#ff2d55}
+.nb.ig{background:#E1306C}
+.sb-ft{margin-top:auto;padding:10px 12px;border-top:1px solid var(--br);font-size:10px;color:var(--tx3)}
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column}
+.tb{position:sticky;top:0;z-index:50;background:rgba(15,15,15,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--br);padding:9px 22px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pb{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:5px;margin-right:6px}
+.dc{display:flex;align-items:center;gap:5px}
+.pbs{display:flex;gap:3px}
+.pbt{font-size:11px;padding:4px 9px;border-radius:var(--rs);border:1px solid var(--br2);background:var(--sf2);color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .15s}
+.pbt.on{background:#ff2d55;border-color:#ff2d55;color:#fff}
+.ds{font-size:10px;color:var(--tx3)}
+input[type=date]{font-size:11px;padding:4px 8px;border-radius:var(--rs);border:1px solid var(--br2);background:var(--sf2);color:var(--tx);cursor:pointer;font-family:inherit}
+.ab{font-size:11px;padding:4px 10px;border-radius:var(--rs);border:1px solid var(--br2);background:var(--sf2);color:var(--tx);cursor:pointer;font-family:inherit}
+.pv{display:none}.pv.on{display:block}
+.pg{display:none;padding:22px}.pg.on{display:block}
+.sec{margin-bottom:24px}
+.sl{font-size:10px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.dv{height:1px;background:var(--br);margin:20px 0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.gk{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px}
+.card{background:var(--sf);border:1px solid var(--br);border-radius:var(--r);padding:14px 16px}
+.kc{background:var(--sf);border:1px solid var(--br);border-radius:var(--r);padding:12px 14px;position:relative;overflow:hidden}
+.kc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kac,#ff2d55)}
+.kl{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.kv{font-size:22px;font-weight:700;color:var(--tx);line-height:1;margin-bottom:3px}
+.ks{font-size:10px;color:var(--tx3)}
+.sg{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.sc{background:var(--sf);border:1px solid var(--br);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.sr{position:relative;width:56px;height:56px}
+.sr svg{width:56px;height:56px;transform:rotate(-90deg)}
+.sv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.sc-t{font-size:11px;font-weight:500;color:var(--tx)}
+.sc-s{font-size:10px;color:var(--tx3);line-height:1.4}
+.mfw{display:flex;gap:4px;flex-wrap:wrap}
+.mfb{font-size:11px;padding:3px 9px;border-radius:20px;border:1px solid var(--br2);background:transparent;color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .15s}
+.mfb.on{background:#ff2d55;border-color:#ff2d55;color:#fff}
+.mfb.ig-on{background:#E1306C;border-color:#E1306C;color:#fff}
+.fr{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.fl{width:50px;font-size:11px;color:var(--tx2);font-weight:500}
+.ft{flex:1;height:7px;background:var(--sf2);border-radius:4px;overflow:hidden}
+.ff{height:100%;border-radius:4px}
+.fv{width:90px;text-align:right;font-size:11px;color:var(--tx2);font-weight:500}
+.tw{overflow-x:auto;border-radius:var(--r);border:1px solid var(--br)}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead th{text-align:left;color:var(--tx3);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:8px 11px;border-bottom:1px solid var(--br);background:var(--sf2);white-space:nowrap}
+tbody td{padding:8px 11px;border-bottom:1px solid var(--br);color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--sf2)}
+.bd{display:inline-block;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px}
+.bt{background:rgba(77,163,255,.15);color:var(--bl)}
+.bm{background:rgba(0,214,143,.15);color:var(--gn)}
+.bb{background:rgba(255,107,53,.15);color:#ff6b35}
+.bfd{background:rgba(225,48,108,.15);color:#E1306C}
+.brl{background:rgba(131,58,180,.15);color:#833AB4}
+.chip{display:inline-block;font-size:10px;padding:1px 6px;border-radius:3px;font-weight:600}
+.at{display:flex;gap:9px;align-items:flex-start;padding:9px 12px;border-radius:var(--rs);font-size:12px;line-height:1.5;margin-bottom:7px}
+.ati{font-size:14px;flex-shrink:0;margin-top:1px}
+.are{background:rgba(255,77,77,.08);border:1px solid rgba(255,77,77,.2);color:#ff9090}
+.aam{background:rgba(255,184,0,.08);border:1px solid rgba(255,184,0,.2);color:#ffd060}
+.agr{background:rgba(0,214,143,.08);border:1px solid rgba(0,214,143,.2);color:#60e0b4}
+.ag2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ah{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--br)}
+.aicn{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.alist{list-style:none;display:flex;flex-direction:column;gap:6px}
+.ali{display:flex;gap:7px;font-size:11.5px;color:var(--tx2);line-height:1.5}
+.ad{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.pr{display:flex;gap:14px;align-items:flex-start;background:var(--sf2);border:1px solid var(--br);border-radius:var(--r);padding:12px 14px;margin-bottom:9px}
+.pn{font-size:18px;font-weight:700;min-width:60px;color:var(--tx);flex-shrink:0}
+.pn span{font-size:10px;font-weight:400;color:var(--tx3);display:block}
+.pt{font-size:12px;font-weight:600;color:var(--tx);margin-bottom:3px}
+.pd{font-size:11px;color:var(--tx2);line-height:1.6}
+.mr{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.mrl{width:130px;font-size:11px;color:var(--tx2);flex-shrink:0}
+.mrt{flex:1;height:6px;background:var(--sf3);border-radius:3px;overflow:hidden}
+.mrf{height:100%;border-radius:3px}
+.mrv{width:45px;text-align:right;font-size:11px;color:var(--tx);font-weight:500}
+.sti{background:var(--sf);border:1px solid var(--br);border-radius:var(--r);padding:14px 16px;margin-bottom:9px}
+.sth{display:flex;align-items:flex-start;gap:9px;margin-bottom:8px}
+.stn{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.stt{font-size:13px;font-weight:600;color:var(--tx)}
+.stb{font-size:12px;color:var(--tx2);line-height:1.7}
+.stgs{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.stg{display:inline-flex;font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600}
+.rm{display:flex;flex-direction:column}
+.rmi{display:flex;gap:12px;padding-bottom:16px;position:relative}
+.rmi:not(:last-child)::before{content:'';position:absolute;left:11px;top:24px;width:1px;bottom:0;background:var(--br)}
+.rmd{width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;z-index:1}
+.rmc{flex:1}.rmw{font-size:10px;color:var(--tx3);margin-bottom:2px}
+.rmt{font-size:12px;font-weight:600;color:var(--tx);margin-bottom:3px}
+.rmd2{font-size:11px;color:var(--tx2);line-height:1.6}
+.vc{background:var(--sf);border:1px solid var(--br);border-radius:var(--r);padding:12px 14px;margin-bottom:9px;display:flex;gap:10px;align-items:flex-start}
+.vc:hover{border-color:var(--br2)}
+.vcp{font-size:12px;font-weight:500;color:var(--tx);margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vm{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px}
+.vmi{font-size:11px;color:var(--tx3);display:flex;align-items:center;gap:3px}
+.vmv{color:var(--tx2);font-weight:500}
+.vb{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}
+.vbg{display:flex;flex-direction:column;gap:2px}
+.vbl{font-size:9px;color:var(--tx3)}
+.vbt{height:4px;background:var(--sf3);border-radius:2px;overflow:hidden}
+.vbf{height:100%;border-radius:2px}
+.vbv{font-size:10px;color:var(--tx2);font-weight:500}
+.vt{display:flex;flex-wrap:wrap;gap:4px}
+.sig{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--tx2);margin-bottom:7px;line-height:1.5}
+.sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.bsh{border-radius:var(--r);padding:20px 24px;margin-bottom:22px}
+.bshl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px}
+.bsht{font-size:18px;font-weight:700;color:var(--tx);margin-bottom:6px;line-height:1.3}
+.bshd{font-size:12px;color:var(--tx2);line-height:1.7;max-width:700px}
+.bsg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.bsc{background:var(--sf);border:1px solid var(--br);border-radius:var(--r);padding:14px 16px;position:relative;overflow:hidden}
+.bsc::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--bsa,#ff4d4d);border-radius:3px 0 0 3px}
+.bsci{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;margin-bottom:9px;font-size:14px}
+.bstg{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.bscn{font-size:12px;font-weight:600;color:var(--tx);margin-bottom:6px;line-height:1.4}
+.bscb{font-size:11px;color:var(--tx2);line-height:1.7}
+.bsev{background:var(--sf2);border-radius:var(--rs);padding:8px 10px;margin-top:8px;font-size:11px;color:var(--tx3);border-left:2px solid var(--bsa,#ff4d4d)}
+.bsev strong{color:var(--tx2)}
+.bsim{margin-top:9px;padding-top:8px;border-top:1px solid var(--br);font-size:11px;color:var(--tx3)}
+.bso{background:var(--sf);border:1px solid rgba(0,214,143,.2);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
+.bson{width:26px;height:26px;border-radius:50%;background:rgba(0,214,143,.12);color:var(--gn);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.bsot{font-size:12px;font-weight:600;color:var(--tx);margin-bottom:4px}
+.bsob{font-size:12px;color:var(--tx2);line-height:1.65}
+.bsow{font-size:11px;color:var(--gn);margin-top:5px}
+.bsmt{overflow-x:auto;border-radius:var(--r);border:1px solid var(--br)}
+.bsmt table{width:100%}
+.bsmt th{padding:9px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em;background:var(--sf2);border-bottom:1px solid var(--br)}
+.bsmt td{padding:9px 12px;font-size:12px;color:var(--tx2);border-bottom:1px solid var(--br);vertical-align:top;line-height:1.5}
+.bsmt tr:last-child td{border-bottom:none}
+.bsmt tr:hover td{background:var(--sf2)}
+.bsmt td:first-child{font-weight:500;color:var(--tx);white-space:nowrap}
+.sk{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px}
+.skk{background:rgba(255,77,77,.2);color:#ff9090}
+.skt{background:rgba(255,184,0,.2);color:#ffd060}
+.sks{background:rgba(77,163,255,.2);color:#80c4ff}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--sf3);border-radius:3px}
+@media(max-width:1100px){.gk{grid-template-columns:repeat(2,1fr)}.sg{grid-template-columns:repeat(3,1fr)}.bsg{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.sb{width:52px}.sb-title,.sb-sub,.ns,.ni span,.sb-ft,.psw{display:none}.main{margin-left:52px}.g2,.gk,.bsg,.ag2,.sg{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-ic" id="sb-ic" style="background:linear-gradient(135deg,#ff2d55,#ff6b35)">
+      <svg id="sb-svg" width="17" height="17" fill="white" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.37 6.37 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.67a8.18 8.18 0 004.78 1.52V6.68a4.85 4.85 0 01-1.01.01z"/></svg>
+    </div>
+    <div><div class="sb-title" id="sb-t">@infarmid</div><div class="sb-sub" id="sb-s">TikTok Dashboard</div></div>
+  </div>
+  <div class="psw">
+    <button class="psb on" id="btn-tt" onclick="SP('tt')">&#127925; TikTok</button>
+    <button class="psb" id="btn-ig" onclick="SP('ig')">&#128248; Instagram</button>
+  </div>
+  <div id="nav-tt">
+    <div class="ns">Analitik</div>
+    <button class="ni on" onclick="PG('tt','ov',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span>Overview</span></button>
+    <button class="ni" onclick="PG('tt','ct',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg><span>Top Konten</span></button>
+    <button class="ni" onclick="PG('tt','au',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Audit Per Video</span></button>
+    <div class="ns">Insight</div>
+    <button class="ni" onclick="PG('tt','sc',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Skor & Pola Viral</span></button>
+    <button class="ni" onclick="PG('tt','st',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Strategi & Roadmap</span></button>
+    <button class="ni" onclick="PG('tt','bs',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg><span>Blind Spot</span><span class="nb">!</span></button>
+  </div>
+  <div id="nav-ig" style="display:none">
+    <div class="ns">Analitik</div>
+    <button class="ni on ig" onclick="PG('ig','ov',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span>Overview</span></button>
+    <button class="ni ig" onclick="PG('ig','ct',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Top Konten</span></button>
+    <button class="ni ig" onclick="PG('ig','au',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Audit Per Post</span></button>
+    <div class="ns">Insight</div>
+    <button class="ni ig" onclick="PG('ig','sc',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Skor & Pola Viral</span></button>
+    <button class="ni ig" onclick="PG('ig','st',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Strategi & Roadmap</span></button>
+    <button class="ni ig" onclick="PG('ig','bs',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg><span>Blind Spot</span><span class="nb ig">!</span></button>
+  </div>
+  <div class="sb-ft"><div id="ft-d">Data: 2–27 Jun 2026</div><div style="margin-top:2px" id="ft-s">Windsor.ai · TikTok Organic</div></div>
+</aside>
+<main class="main">
+<div class="tb">
+  <div style="font-size:12px;font-weight:500;color:var(--tx2)">
+    <span class="pb" id="pb" style="background:rgba(255,45,85,.15);color:#ff2d55">&#127925; TikTok</span>
+    Intelligence Report · <span id="dl">28 hari terakhir</span>
+  </div>
+  <div class="dc">
+    <div class="pbs">
+      <button class="pbt" onclick="setP(7,this)">7H</button>
+      <button class="pbt" onclick="setP(14,this)">14H</button>
+      <button class="pbt on" onclick="setP(28,this)">28H</button>
+    </div>
+    <span class="ds">|</span>
+    <input type="date" id="df"><span class="ds">-</span><input type="date" id="dt">
+    <button class="ab" onclick="applyC()">Terapkan</button>
+  </div>
+</div>
+
+<!-- TT PLATFORM -->
+<div class="pv on" id="pv-tt">
+
+<div class="pg on" id="tt-ov">
+<div class="sec"><div class="sl">Metrik utama</div><div class="gk" id="tt-kpi"></div></div>
+<div class="sec">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+    <div class="sl" style="margin-bottom:0">Tren harian</div>
+    <div class="mfw" id="tt-mf">
+      <button class="mfb on" data-m="vv" onclick="ttSM(this)">Views</button>
+      <button class="mfb" data-m="lk" onclick="ttSM(this)">Likes</button>
+      <button class="mfb" data-m="fw" onclick="ttSM(this)">Followers baru</button>
+      <button class="mfb" data-m="er" onclick="ttSM(this)">ER%</button>
+      <button class="mfb" data-m="eg" onclick="ttSM(this)">Penonton aktif</button>
+      <button class="mfb" data-m="pv" onclick="ttSM(this)">Profile views</button>
+    </div>
+  </div>
+  <div class="card" style="padding:14px"><div style="position:relative;width:100%;height:200px"><canvas id="tt-ch"></canvas></div></div>
+</div>
+<div class="g2">
+  <div class="card"><div class="sl" style="margin-bottom:10px">Distribusi funnel</div><div id="tt-fn"></div><div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--br);display:flex;gap:12px;font-size:10px"><span style="color:var(--bl)">&#9632; TOFU</span><span style="color:var(--gn)">&#9632; MOFU</span><span style="color:#ff6b35">&#9632; BOFU</span><span style="color:var(--tx3);margin-left:auto" id="tt-ft"></span></div></div>
+  <div class="card"><div class="sl" style="margin-bottom:10px">Sinyal kritis</div><div id="tt-sg"></div></div>
+</div>
+</div>
+
+<div class="pg" id="tt-ct">
+<div class="sec"><div class="sl">Top 5 konten - by views</div><div class="tw"><table><thead><tr><th>#</th><th>Konten</th><th>Views</th><th>Likes</th><th>Shares</th><th>ER%</th><th>Watch%</th><th>Avg W</th><th>Foll+</th><th>Funnel</th></tr></thead><tbody id="tt-tp"></tbody></table></div></div>
+<div class="sec"><div class="sl">Low performance - views &lt;10K</div><div class="tw"><table><thead><tr><th>#</th><th>Konten</th><th>Views</th><th>ER%</th><th>Watch%</th><th>Avg W</th><th>Diagnosis</th></tr></thead><tbody id="tt-lw"></tbody></table></div></div>
+<div class="sec"><div class="sl">Keranjang kuning - CVR proxy tertinggi</div><div class="tw"><table><thead><tr><th>#</th><th>Konten</th><th>Views</th><th>Profile Views</th><th>CVR proxy</th><th>Funnel</th></tr></thead><tbody id="tt-kk"></tbody></table></div></div>
+</div>
+
+<div class="pg" id="tt-au">
+<div class="sec">
+  <div class="at are"><div class="ati">&#9888;</div><div><strong>Kritis:</strong> Tidak ada konten produk yang memiliki CTA keranjang kuning aktif. Audit manual semua konten produk dan aktifkan link TikTok Shop hari ini.</div></div>
+  <div class="at aam"><div class="ati">&#9651;</div><div><strong>Celah terbesar:</strong> MOFU hampir tidak ada (&lt;5%). Tidak ada testimoni, before-after, atau social proof.</div></div>
+  <div class="at agr"><div class="ati">&#10003;</div><div><strong>Formula terbukti:</strong> "Salah sangka + reveal" viral 3x (gulma 752K, serangga 86K, cengkeh 78K). Jadikan template mingguan.</div></div>
+</div>
+<div class="sec"><div class="sl">Audit per video</div><div id="tt-ac"></div></div>
+</div>
+
+<div class="pg" id="tt-sc">
+<div class="sec"><div class="sl">Skor kesehatan akun TikTok</div><div class="sg" id="tt-sc2"></div></div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Audit konten</div><div class="ag2">
+  <div class="card"><div class="ah"><div class="aicn" style="background:rgba(0,214,143,.15)">&#10003;</div><div style="font-size:12px;font-weight:600;color:var(--tx)">Yang sudah bagus</div></div><ul class="alist">
+    <li class="ali"><div class="ad" style="background:var(--gn)"></div>Frekuensi 3-4 konten/hari konsisten - algoritma TikTok merespons baik.</li>
+    <li class="ali"><div class="ad" style="background:var(--gn)"></div>Formula "salah sangka + reveal" terbukti viral 3x, watch rate 28-31%.</li>
+    <li class="ali"><div class="ad" style="background:var(--gn)"></div>Konten sains alam avg watch time &gt;14 detik - tertinggi di dataset.</li>
+    <li class="ali"><div class="ad" style="background:var(--gn)"></div>NPK hitam (228K) membuktikan produk bisa viral jika hook-nya emosional.</li>
+  </ul></div>
+  <div class="card"><div class="ah"><div class="aicn" style="background:rgba(255,77,77,.15)">!</div><div style="font-size:12px;font-weight:600;color:var(--tx)">Yang perlu diperbaiki</div></div><ul class="alist">
+    <li class="ali"><div class="ad" style="background:var(--rd)"></div>BOFU &lt;15% - audiens warm ada tapi tidak ada jembatan ke toko.</li>
+    <li class="ali"><div class="ad" style="background:var(--rd)"></div>Konten promo eksplisit hanya 1K-10K views karena opening langsung jualan.</li>
+    <li class="ali"><div class="ad" style="background:var(--rd)"></div>Watch rate konten produk 3-6% - penonton kabur di detik pertama.</li>
+    <li class="ali"><div class="ad" style="background:var(--rd)"></div>MOFU hampir nol - tidak ada testimoni, before-after, atau social proof.</li>
+  </ul></div>
+</div></div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Pola viral terbukti</div>
+  <div class="pr"><div class="pn">752K<span>views</span></div><div><div class="pt">Formula 1 - "Salah sangka + reveal" <span class="bd bt" style="font-size:9px;margin-left:6px">TOFU</span></div><div class="pd">Objek familiar baru reveal fakta mengejutkan. Watch rate 31%, avg watch 14.9s. Replikasi ke: tanaman liar, serangga "jahat" yang berguna, bahan dapur yang bisa jadi pupuk.</div></div></div>
+  <div class="pr"><div class="pn">228K<span>views</span></div><div><div class="pt">Formula 2 - "Produk + pain point nyata" <span class="bd bb" style="font-size:9px;margin-left:6px">BOFU</span></div><div class="pd">NPK hitam dikemas sebagai solusi masalah spesifik. "Nggak takut tanahku cepet rusak lagi." Profile view CVR tertinggi di dataset.</div></div></div>
+  <div class="pr"><div class="pn">86K<span>views</span></div><div><div class="pt">Formula 3 - "Makhluk yang sering salah diperlakukan" <span class="bd bt" style="font-size:9px;margin-left:6px">TOFU</span></div><div class="pd">Serangga parasitoid - avg watch 19.3 detik tertinggi di dataset. Replikasi ke: mikroba tanah, cacing tanah, lebah liar.</div></div></div>
+</div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Distribusi funnel saat ini vs target</div><div class="g2">
+  <div><div style="font-size:10px;color:var(--tx3);margin-bottom:8px">Saat ini</div>
+    <div class="mr"><div class="mrl">TOFU saat ini</div><div class="mrt"><div class="mrf" style="width:80%;background:var(--bl)"></div></div><div class="mrv">~80%</div></div>
+    <div class="mr"><div class="mrl">MOFU saat ini</div><div class="mrt"><div class="mrf" style="width:5%;background:var(--gn)"></div></div><div class="mrv">~5%</div></div>
+    <div class="mr"><div class="mrl">BOFU saat ini</div><div class="mrt"><div class="mrf" style="width:15%;background:#ff6b35"></div></div><div class="mrv">~15%</div></div>
+  </div>
+  <div><div style="font-size:10px;color:var(--tx3);margin-bottom:8px">Target ideal</div>
+    <div class="mr"><div class="mrl">TOFU target</div><div class="mrt"><div class="mrf" style="width:60%;background:rgba(77,163,255,.5)"></div></div><div class="mrv">60%</div></div>
+    <div class="mr"><div class="mrl">MOFU target</div><div class="mrt"><div class="mrf" style="width:25%;background:rgba(0,214,143,.5)"></div></div><div class="mrv">25%</div></div>
+    <div class="mr"><div class="mrl">BOFU target</div><div class="mrt"><div class="mrf" style="width:15%;background:rgba(255,107,53,.5)"></div></div><div class="mrv">15%</div></div>
+  </div>
+</div></div>
+</div>
+
+<div class="pg" id="tt-st">
+<div class="sec"><div class="sl">5 prioritas strategi TikTok</div>
+  <div class="sti"><div class="sth"><div class="stn" style="background:rgba(255,45,85,.15);color:#ff2d55">1</div><div class="stt">Adopsi formula viral sebagai standar semua konten produk</div></div><div class="stb">Semua konten produk wajib: opening = visual masalah nyata, detik 5-8 = produk masuk sebagai solusi, detik terakhir = CTA ke keranjang. Bukan "Pupuk NPK terbaik", tapi "Tanah kamu mungkin sekarat tanpa ini."</div><div class="stgs"><span class="stg" style="background:rgba(255,107,53,.15);color:#ff6b35">BOFU</span><span class="stg" style="background:rgba(255,184,0,.15);color:var(--am)">&#128293; Eksekusi minggu ini</span></div></div>
+  <div class="sti"><div class="sth"><div class="stn" style="background:rgba(77,163,255,.15);color:var(--bl)">2</div><div class="stt">Terapkan rasio konten 60-25-15 setiap hari</div></div><div class="stb">Dari 3-4 konten per hari: 2 TOFU, 1 MOFU (testimoni/before-after/spill paket), 1 BOFU (produk dengan hook TOFU). MOFU adalah layer paling kosong dan paling kritis.</div><div class="stgs"><span class="stg" style="background:rgba(77,163,255,.15);color:var(--bl)">TOFU</span><span class="stg" style="background:rgba(0,214,143,.15);color:var(--gn)">MOFU</span><span class="stg" style="background:rgba(255,107,53,.15);color:#ff6b35">BOFU</span></div></div>
+  <div class="sti"><div class="sth"><div class="stn" style="background:rgba(0,214,143,.15);color:var(--gn)">3</div><div class="stt">Aktifkan keranjang kuning semua konten produk hari ini</div></div><div class="stb">Audit manual semua konten produk: aktifkan link TikTok Shop, tambah CTA di caption. NPK hitam punya CVR profile view 0.2% - ratusan orang berniat beli tapi tidak ada jalur ke toko.</div><div class="stgs"><span class="stg" style="background:rgba(255,45,85,.15);color:#ff2d55">&#9889; Quick win hari ini</span></div></div>
+  <div class="sti"><div class="sth"><div class="stn" style="background:rgba(255,184,0,.15);color:var(--am)">4</div><div class="stt">Perbaiki opening 3 detik - zero sales language di awal</div></div><div class="stb">Watch rate promo eksplisit hanya 2-3%. Rule baru: tidak boleh ada logo, nama produk, harga di 5 detik pertama. Opening = visual pain point spesifik. Perubahan ini bisa 3-5x lipat watch rate.</div><div class="stgs"><span class="stg" style="background:rgba(255,184,0,.15);color:var(--am)">Rule baru mulai sekarang</span></div></div>
+  <div class="sti"><div class="sth"><div class="stn" style="background:rgba(155,109,255,.15);color:var(--pu)">5</div><div class="stt">Bangun seri konten + aktifkan karakter Minfarm</div></div><div class="stb">Buat seri "Tanaman yang sering disalahpahami #1, #2, #3" dengan Minfarm sebagai host tetap. Penonton kembali untuk episode berikutnya. Di akhir tiap episode selipkan produk secara natural.</div><div class="stgs"><span class="stg" style="background:rgba(77,163,255,.15);color:var(--bl)">TOFU</span><span class="stg" style="background:rgba(0,214,143,.15);color:var(--gn)">MOFU</span></div></div>
+</div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Roadmap 4 minggu TikTok</div><div class="rm">
+  <div class="rmi"><div class="rmd" style="background:rgba(255,45,85,.15);color:#ff2d55">1</div><div class="rmc"><div class="rmw">Minggu 1 - Audit & quick wins</div><div class="rmt">Aktifkan keranjang kuning + rewrite hook konten produk baru</div><div class="rmd2">Audit manual 10-15 konten produk. Aktifkan link TikTok Shop. Terapkan rule zero sales language di 5 detik pertama.</div></div></div>
+  <div class="rmi"><div class="rmd" style="background:rgba(77,163,255,.15);color:var(--bl)">2</div><div class="rmc"><div class="rmw">Minggu 2 - Produksi BOFU-hybrid</div><div class="rmt">5 konten produk dengan formula "pain point + reveal + solusi"</div><div class="rmd2">Target: NPK humat, BIVI, cocopeat, benih cabai, benih tomat. Dokumentasikan watch rate dan CVR per video.</div></div></div>
+  <div class="rmi"><div class="rmd" style="background:rgba(0,214,143,.15);color:var(--gn)">3</div><div class="rmc"><div class="rmw">Minggu 3 - Launch seri + MOFU perdana</div><div class="rmt">Seri "Tanaman yang sering disalahpahami" part 1-5 + 2 MOFU pertama</div><div class="rmd2">Replikasi formula viral gulma ke 5 topik baru. Paralel: 1 spill paket, 1 testimoni pelanggan.</div></div></div>
+  <div class="rmi" style="padding-bottom:0"><div class="rmd" style="background:rgba(255,184,0,.15);color:var(--am)">4</div><div class="rmc"><div class="rmw">Minggu 4 - Scale MOFU + evaluasi</div><div class="rmt">5 konten MOFU + review data full funnel</div><div class="rmd2">2 testimoni, 1 before-after 30 hari, 1 behind-the-scenes, 1 kompilasi review bintang 5. Review dan jadikan benchmark bulan berikutnya.</div></div></div>
+</div></div>
+</div>
+
+<div class="pg" id="tt-bs">
+<div class="bsh" style="background:linear-gradient(135deg,rgba(255,45,85,.08),rgba(155,109,255,.06));border:1px solid rgba(255,45,85,.2)"><div class="bshl" style="color:#ff2d55">Analisis blind spot TikTok</div><div class="bsht">9 area tersembunyi yang sedang merugikan @infarmid secara diam-diam</div><div class="bshd">Blind spot adalah masalah yang tidak terdeteksi dari angka views dan likes saja. Semua temuan berbasis data real Windsor.ai 28 hari terakhir.</div></div>
+<div class="sec"><div class="sl">9 blind spot kritis TikTok</div><div class="bsg">
+  <div class="bsc" style="--bsa:#ff4d4d"><div class="bsci" style="background:rgba(255,77,77,.1)">&#128371;</div><div class="bstg" style="background:rgba(255,77,77,.15);color:#ff9090">Kritis</div><div class="bscn">Konten menarget rasa ingin tahu, bukan niat beli</div><div class="bscb">Semua konten viral menarik penonton yang penasaran tentang alam - bukan yang sedang mencari produk kebun untuk dibeli. Jurang struktural antara audiens yang dijangkau dan yang berpotensi beli.</div><div class="bsev"><strong>Data:</strong> Gulma: <strong>1.605 follower baru</strong>, NPK hitam hanya <strong>112 follower</strong> dari 228K views.</div><div class="bsim">Dampak: <strong>Reach tinggi tapi konversi rendah secara struktural</strong></div></div>
+  <div class="bsc" style="--bsa:#ff4d4d"><div class="bsci" style="background:rgba(255,77,77,.1)">&#128123;</div><div class="bstg" style="background:rgba(255,77,77,.15);color:#ff9090">Kritis</div><div class="bscn">6.100+ followers baru tidak dikonversi ke tahap berikutnya</div><div class="bscb">Tidak ada konten follow-up yang menyambut followers baru. Tidak ada MOFU yang menjelaskan "kenapa Infarm". Mereka masuk, lihat sekali, lalu diam.</div><div class="bsev"><strong>Data:</strong> Total followers baru: <strong>~6.100+</strong> tapi tidak ada MOFU untuk mengkonversinya.</div><div class="bsim">Dampak: <strong>Biaya akuisisi follower terbuang sia-sia</strong></div></div>
+  <div class="bsc" style="--bsa:#ff4d4d"><div class="bsci" style="background:rgba(255,77,77,.1)">&#128263;</div><div class="bstg" style="background:rgba(255,77,77,.15);color:#ff9090">Kritis</div><div class="bscn">Komentar rate sangat rendah - hampir tidak ada diskusi nyata</div><div class="bscb">TikTok algoritma menggunakan komentar sebagai sinyal kekuatan konten. 4M+ views tapi ~900 komentar = sinyal distribusi FYP sangat lemah.</div><div class="bsev"><strong>Data:</strong> Rata-rata <strong>&lt;0.03%</strong> vs benchmark niche <strong>0.2-0.5%</strong>.</div><div class="bsim">Dampak: <strong>Distribusi FYP terhambat secara algoritmik</strong></div></div>
+  <div class="bsc" style="--bsa:#ffb800"><div class="bsci" style="background:rgba(255,184,0,.1)">&#9200;</div><div class="bstg" style="background:rgba(255,184,0,.15);color:#ffd060">Tinggi</div><div class="bscn">Posting 3-4x/hari tapi timing tidak teroptimasi</div><div class="bscb">Distribusi awal menentukan apakah video masuk FYP luas. Konten yang sama bisa 2-3x lebih banyak distribusi jika diposting di jam peak activity audiens.</div><div class="bsev"><strong>Data:</strong> Beberapa konten diposting jam 02-03 WIB. Peak performa tidak berkorelasi dengan timing posting.</div><div class="bsim">Dampak: <strong>Potensi reach terbuang 20-40% hanya karena timing</strong></div></div>
+  <div class="bsc" style="--bsa:#ffb800"><div class="bsci" style="background:rgba(255,184,0,.1)">&#127917;</div><div class="bstg" style="background:rgba(255,184,0,.15);color:#ffd060">Tinggi</div><div class="bscn">Karakter Minfarm tidak hadir di TikTok - aset terbesar brand diabaikan</div><div class="bscb">Minfarm dengan catchphrase "waduh waduh" dan "kok iso minfarm" belum digunakan konsisten sebagai host. Karakter tetap membuat penonton kembali bukan hanya untuk topiknya.</div><div class="bsev"><strong>Data:</strong> Minfarm hanya muncul di 2 dari 60+ konten. Tidak ada yang konsisten sebagai host berkarakter.</div><div class="bsim">Dampak: <strong>Brand recall rendah - penonton tidak bisa mengenali Infarm</strong></div></div>
+  <div class="bsc" style="--bsa:#ffb800"><div class="bsci" style="background:rgba(255,184,0,.1)">&#128722;</div><div class="bstg" style="background:rgba(255,184,0,.15);color:#ffd060">Tinggi</div><div class="bscn">TOFU edukasi tidak terhubung ke produk - kompetitor yang untung</div><div class="bscb">Konten "Rahasia jambu berbuah lebat" (45K views) tidak menyebut produk apapun. Penonton belajar dari Infarm tapi membeli dari toko lain.</div><div class="bsev"><strong>Data:</strong> Dari top 10 konten TOFU, hanya 1 yang punya referensi produk secara natural.</div><div class="bsim">Dampak: <strong>Kompetitor untung dari edukasi Infarm</strong></div></div>
+  <div class="bsc" style="--bsa:#4da3ff"><div class="bsci" style="background:rgba(77,163,255,.1)">&#128202;</div><div class="bstg" style="background:rgba(77,163,255,.15);color:#80c4ff">Sedang</div><div class="bscn">Share rate tinggi tapi tidak ke konten produk</div><div class="bscb">Audiens mau menyebarkan konten Infarm - tapi yang disebarkan adalah konten alam non-produk. Viral potential tidak tersalurkan ke konten yang menguntungkan brand.</div><div class="bsev"><strong>Data:</strong> Gulma: <strong>912 shares</strong>, NPK hitam: <strong>112 shares</strong>. Rasio share produk 2.5x lebih rendah dari konten alam.</div><div class="bsim">Dampak: <strong>Viral potential tidak tersalurkan ke konten yang menguntungkan</strong></div></div>
+  <div class="bsc" style="--bsa:#4da3ff"><div class="bsci" style="background:rgba(77,163,255,.1)">&#128241;</div><div class="bstg" style="background:rgba(77,163,255,.15);color:#80c4ff">Sedang</div><div class="bscn">57K+ profile views/bulan tidak dimonetisasi</div><div class="bscb">Rata-rata 2K profile views/hari, spike 7K+ saat viral. Tapi bio kemungkinan belum dioptimasi sebagai landing page dengan CTA jelas dan link TikTok Shop.</div><div class="bsev"><strong>Data:</strong> Total profile views: <strong>~57K+</strong>/bulan. Jika 5% mengklik toko = ~2.850 potential buyers yang mampir tapi tidak dikaptalisasi.</div><div class="bsim">Dampak: <strong>57K+ profile visits per bulan tidak dikonversi</strong></div></div>
+  <div class="bsc" style="--bsa:#9b6dff"><div class="bsci" style="background:rgba(155,109,255,.1)">&#128260;</div><div class="bstg" style="background:rgba(155,109,255,.15);color:#c4a0ff">Sedang</div><div class="bscn">Tidak ada siklus konten - setiap video berdiri sendiri</div><div class="bscb">Tidak ada seri bernomor, tidak ada referensi ke konten sebelumnya. Setiap video berjuang sendiri tanpa compounding effect dari seri yang terkoneksi.</div><div class="bsev"><strong>Data:</strong> Dari 60+ video, tidak ada satu pun penanda seri. Tidak ada retention loop.</div><div class="bsim">Dampak: <strong>Tidak ada compounding effect - setiap hari mulai dari nol</strong></div></div>
+</div></div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Matriks prioritas TikTok</div><div class="bsmt"><table><thead><tr><th style="width:170px">Blind Spot</th><th style="width:72px">Severity</th><th style="width:88px">Mudah?</th><th style="width:112px">Dampak</th><th>Langkah pertama</th></tr></thead><tbody>
+  <tr><td>Followers tidak dikonversi</td><td><span class="sk skk">Kritis</span></td><td style="color:var(--gn)">Tinggi</td><td style="color:var(--gn)">Revenue langsung</td><td>Buat 1 video MOFU sambut followers baru dalam 48 jam</td></tr>
+  <tr><td>Keranjang kuning tidak aktif</td><td><span class="sk skk">Kritis</span></td><td style="color:var(--gn)">Sangat tinggi</td><td style="color:var(--gn)">Revenue langsung</td><td>Audit dan aktifkan link produk semua konten hari ini</td></tr>
+  <tr><td>Komentar rate sangat rendah</td><td><span class="sk skk">Kritis</span></td><td style="color:var(--gn)">Tinggi</td><td style="color:var(--bl)">FYP distribution naik</td><td>Ganti semua CTA dengan pertanyaan spesifik yang memancing jawaban</td></tr>
+  <tr><td>Profile view tidak dimonetisasi</td><td><span class="sk skt">Tinggi</span></td><td style="color:var(--gn)">Sangat tinggi</td><td style="color:var(--gn)">Revenue langsung</td><td>Optimasi bio + pin video terbaik + aktifkan link TikTok Shop</td></tr>
+  <tr><td>Karakter Minfarm tidak hadir</td><td><span class="sk skt">Tinggi</span></td><td style="color:var(--am)">Sedang</td><td style="color:var(--bl)">Brand recall & retention</td><td>Buat 1 seri dengan Minfarm sebagai host tetap mulai minggu depan</td></tr>
+  <tr><td>Timing posting tidak optimal</td><td><span class="sk skt">Tinggi</span></td><td style="color:var(--gn)">Sangat tinggi</td><td style="color:var(--bl)">Reach naik 20-40%</td><td>Cek TikTok Studio Audience Activity, posting di jam peak</td></tr>
+  <tr><td>Tidak ada siklus konten</td><td><span class="sk sks">Sedang</span></td><td style="color:var(--am)">Sedang</td><td style="color:var(--bl)">Return viewer naik</td><td>Mulai seri "Tanaman yang sering disalahpahami #1" minggu ini</td></tr>
+</tbody></table></div></div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Peluang tersembunyi TikTok</div>
+  <div class="bso"><div class="bson">1</div><div><div class="bsot">Jika komentar rate naik dari 0.03% ke 0.2% (benchmark niche)</div><div class="bsob">TikTok mendistribusikan konten "high engagement" lebih agresif ke FYP. Dengan views 150K/hari, komentar rate 0.2% = 300 komentar/hari. Langkah: ganti CTA dari pertanyaan umum ke pertanyaan spesifik yang ada di dalam konten.</div><div class="bsow">Estimasi dampak: distribusi organik naik 1.5-3x dari kondisi saat ini</div></div></div>
+  <div class="bso"><div class="bson">2</div><div><div class="bsot">Jika 57K profile views/bulan dikonversi dengan bio yang teroptimasi</div><div class="bsob">Jika bio diubah jadi mini landing page dan ditambah pinned video konversi, conversion rate profil bisa naik dari &lt;1% ke 3-5%. Ini setara 1.700-2.850 potential buyers dari profil saja per bulan.</div><div class="bsow">Estimasi dampak: 1.700+ buyer intent visitors per bulan tanpa konten baru</div></div></div>
+  <div class="bso"><div class="bson">3</div><div><div class="bsot">Jika Minfarm hadir sebagai karakter host yang konsisten</div><div class="bsob">Akun dengan karakter host tetap punya return viewer rate lebih tinggi. Minfarm dengan "waduh waduh" sudah punya DNA kuat tapi belum dieksploitasi di TikTok. Karakter juga membuat BOFU terasa natural.</div><div class="bsow">Estimasi dampak: follower retention naik, brand recall naik, BOFU acceptance rate naik</div></div></div>
+</div>
+</div>
+
+</div><!-- end pv-tt -->
+
+<!-- IG PLATFORM -->
+<div class="pv" id="pv-ig">
+
+<div class="pg on" id="ig-ov">
+<div class="sec"><div class="sl">Metrik utama</div><div class="gk" id="ig-kpi"></div></div>
+<div class="sec">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+    <div class="sl" style="margin-bottom:0">Tren harian</div>
+    <div class="mfw" id="ig-mf">
+      <button class="mfb ig-on" data-m="views" onclick="igSM(this)">Views</button>
+      <button class="mfb" data-m="likes" onclick="igSM(this)">Likes</button>
+      <button class="mfb" data-m="saves" onclick="igSM(this)">Saves</button>
+      <button class="mfb" data-m="shares" onclick="igSM(this)">Shares</button>
+      <button class="mfb" data-m="reach" onclick="igSM(this)">Reach</button>
+      <button class="mfb" data-m="follower_count" onclick="igSM(this)">Followers baru</button>
+      <button class="mfb" data-m="er" onclick="igSM(this)">ER%</button>
+    </div>
+  </div>
+  <div class="card" style="padding:14px"><div style="position:relative;width:100%;height:200px"><canvas id="ig-ch"></canvas></div></div>
+</div>
+<div class="g2">
+  <div class="card"><div class="sl" style="margin-bottom:10px">Distribusi tipe konten</div><div id="ig-fn"></div><div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--br);display:flex;gap:12px;font-size:10px"><span style="color:#E1306C">&#9632; Feed/Carousel</span><span style="color:#833AB4">&#9632; Reels</span><span style="color:var(--tx3);margin-left:auto" id="ig-ft"></span></div></div>
+  <div class="card"><div class="sl" style="margin-bottom:10px">Sinyal kritis</div><div id="ig-sg"></div></div>
+</div>
+</div>
+
+<div class="pg" id="ig-ct">
+<div class="sec"><div class="sl">Top 10 konten - by views</div><div class="tw"><table><thead><tr><th>#</th><th></th><th>Caption</th><th>Views</th><th>Likes</th><th>Saves</th><th>Shares</th><th>ER%</th><th>Reach</th><th>Tipe</th></tr></thead><tbody id="ig-tp"></tbody></table></div></div>
+<div class="sec"><div class="sl">Low performance</div><div class="tw"><table><thead><tr><th>#</th><th>Caption</th><th>Views</th><th>ER%</th><th>Saves</th><th>Tipe</th><th>Diagnosis</th></tr></thead><tbody id="ig-lw"></tbody></table></div></div>
+<div class="sec"><div class="sl">Top saves - konten paling sering disimpan (hot leads)</div><div class="tw"><table><thead><tr><th>#</th><th>Caption</th><th>Views</th><th>Saves</th><th>Shares</th><th>ER%</th><th>Tipe</th></tr></thead><tbody id="ig-sv"></tbody></table></div></div>
+</div>
+
+<div class="pg" id="ig-au">
+<div class="sec">
+  <div class="at agr"><div class="ati">&#10003;</div><div><strong>Temuan terkuat:</strong> Feed avg 240K views & ER 6.58% vs Reels avg 83K & ER 3.2%. Kekuatan unik akun ini yang harus dieksploitasi lebih.</div></div>
+  <div class="at are"><div class="ati">&#9888;</div><div><strong>Kritis:</strong> 84 Reels diproduksi tapi performanya separuh dari 49 Feed. Misalokasi sumber daya produksi yang signifikan.</div></div>
+  <div class="at aam"><div class="ati">&#9651;</div><div><strong>Saves tidak dikaptalisasi:</strong> 5.506 saves dari stroberi - audiens paling hangat - tapi tidak ada satu pun yang diarahkan ke produk Infarm.</div></div>
+</div>
+<div class="sec"><div class="sl">Audit per post</div><div id="ig-ac"></div></div>
+</div>
+
+<div class="pg" id="ig-sc">
+<div class="sec"><div class="sl">Skor kesehatan akun Instagram</div><div class="sg" id="ig-sc2"></div></div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Audit konten Instagram</div><div class="ag2">
+  <div class="card"><div class="ah"><div class="aicn" style="background:rgba(0,214,143,.15)">&#10003;</div><div style="font-size:12px;font-weight:600;color:var(--tx)">Yang sudah bagus</div></div><ul class="alist">
+    <li class="ali"><div class="ad" style="background:var(--gn)"></div>Feed/Carousel avg ER 6.58% vs Reels 3.2% - kekuatan unik yang harus dieksploitasi lebih.</li>
+    <li class="ali"><div class="ad" style="background:var(--gn)"></div>Formula "fakta alam mengejutkan" terbukti: stroberi 1.85M, petani Inggris 1.14M.</li>
+    <li class="ali"><div class="ad" style="background:var(--gn)"></div>Saves rate tinggi: 5.506 dari satu konten - audiens menilai konten Infarm sangat bernilai.</li>
+    <li class="ali"><div class="ad" style="background:var(--gn)"></div>Reposts 22K+/bulan - konten Infarm aktif disebarkan organik ke Stories orang lain.</li>
+    <li class="ali"><div class="ad" style="background:var(--gn)"></div>Total interactions 800K+ per bulan - audiens aktif dan konsisten terlibat.</li>
+  </ul></div>
+  <div class="card"><div class="ah"><div class="aicn" style="background:rgba(255,77,77,.15)">!</div><div style="font-size:12px;font-weight:600;color:var(--tx)">Yang perlu diperbaiki</div></div><ul class="alist">
+    <li class="ali"><div class="ad" style="background:var(--rd)"></div>63% konten Reels padahal Feed 3x lebih kuat - rasio produksi tidak optimal.</li>
+    <li class="ali"><div class="ad" style="background:var(--rd)"></div>70K+ saves per bulan tidak diarahkan ke produk - audiens paling hangat diabaikan.</li>
+    <li class="ali"><div class="ad" style="background:var(--rd)"></div>Stories hampir nol - satu-satunya format dengan link langsung ke Shopee tidak digunakan.</li>
+    <li class="ali"><div class="ad" style="background:var(--am)"></div>Konten BOFU/produk ada di Reels (format terlemah) - seharusnya di Feed.</li>
+    <li class="ali"><div class="ad" style="background:var(--am)"></div>22K reposts tanpa watermark - distribusi gratis tapi brand tidak tertinggal.</li>
+  </ul></div>
+</div></div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Pola viral terbukti - Instagram</div>
+  <div class="pr"><div class="pn">1.85M<span>views</span></div><div><div class="pt">Formula 1 - "Familiar tapi aspek tersembunyinya mengejutkan" <span class="bd bfd" style="font-size:9px;margin-left:6px">FEED</span></div><div class="pd">Stroberi - semua orang kenal tapi tidak tahu proses tumbuhnya. ER 9.4%, saves 5.506. Replikasi: proses tumbuh jahe/kunyit/bawang, siklus hidup tanaman buah.</div></div></div>
+  <div class="pr"><div class="pn">1.14M<span>views</span></div><div><div class="pt">Formula 2 - "Petani/negara yang berlawanan ekspektasi" <span class="bd bfd" style="font-size:9px;margin-left:6px">FEED</span></div><div class="pd">Petani Inggris sengaja biarkan lahan "kurang produktif" untuk konservasi. Reach 728K. Formula: "kenapa seseorang melakukan sesuatu yang tampaknya salah?"</div></div></div>
+  <div class="pr"><div class="pn">498K<span>views</span></div><div><div class="pt">Formula 3 - "Koneksi alam yang tidak terduga" <span class="bd bfd" style="font-size:9px;margin-left:6px">FEED</span></div><div class="pd">Tanaman di luar angkasa, di tubuh manusia, di dasar laut - ER 11.31% tertinggi di dataset. Setiap slide memberikan kejutan baru, mendorong swipe sampai habis.</div></div></div>
+  <div class="pr"><div class="pn">348K<span>views</span></div><div><div class="pt">Formula 4 - "Konten emosional tentang alam" <span class="bd bfd" style="font-size:9px;margin-left:6px">FEED</span></div><div class="pd">"Bumi selalu memberi" - ER 13.41%, likes 19.8K. Menyentuh audiens urban yang merindukan koneksi dengan alam. ER tertinggi di seluruh dataset Instagram.</div></div></div>
+</div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Feed vs Reels - perbandingan data real</div><div class="g2">
+  <div><div style="font-size:10px;color:var(--tx3);margin-bottom:8px">Rata-rata per konten</div>
+    <div class="mr"><div class="mrl">Avg views - Feed</div><div class="mrt"><div class="mrf" style="width:100%;background:#E1306C"></div></div><div class="mrv">240K</div></div>
+    <div class="mr"><div class="mrl">Avg views - Reels</div><div class="mrt"><div class="mrf" style="width:34%;background:#833AB4"></div></div><div class="mrv">83K</div></div>
+    <div class="mr"><div class="mrl">Avg ER - Feed</div><div class="mrt"><div class="mrf" style="width:100%;background:#E1306C"></div></div><div class="mrv">6.58%</div></div>
+    <div class="mr"><div class="mrl">Avg ER - Reels</div><div class="mrt"><div class="mrf" style="width:49%;background:#833AB4"></div></div><div class="mrv">3.2%</div></div>
+  </div>
+  <div><div style="font-size:10px;color:var(--tx3);margin-bottom:8px">Distribusi saat ini vs target</div>
+    <div class="mr"><div class="mrl">Feed saat ini</div><div class="mrt"><div class="mrf" style="width:37%;background:#E1306C"></div></div><div class="mrv">37%</div></div>
+    <div class="mr"><div class="mrl">Feed target</div><div class="mrt"><div class="mrf" style="width:55%;background:rgba(225,48,108,.4)"></div></div><div class="mrv">55%</div></div>
+    <div class="mr"><div class="mrl">Reels saat ini</div><div class="mrt"><div class="mrf" style="width:63%;background:#833AB4"></div></div><div class="mrv">63%</div></div>
+    <div class="mr"><div class="mrl">Reels target</div><div class="mrt"><div class="mrf" style="width:35%;background:rgba(131,58,180,.4)"></div></div><div class="mrv">35%</div></div>
+  </div>
+</div></div>
+</div>
+
+<div class="pg" id="ig-st">
+<div class="sec"><div class="sl">5 prioritas strategi Instagram</div>
+  <div class="sti"><div class="sth"><div class="stn" style="background:rgba(225,48,108,.15);color:#E1306C">1</div><div class="stt">Balik rasio konten: lebih banyak Feed, kurangi Reels</div></div><div class="stb">Data sangat jelas: Feed rata-rata 240K views dan ER 6.58%, Reels hanya 83K dan ER 3.2%. Target rasio baru: 55% Feed, 35% Reels, 10% Stories. Setiap Reels harus punya alasan spesifik kenapa dipilih format video bukan Feed.</div><div class="stgs"><span class="stg" style="background:rgba(225,48,108,.15);color:#E1306C">FEED</span><span class="stg" style="background:rgba(255,184,0,.15);color:var(--am)">&#128293; Ubah segera</span></div></div>
+  <div class="sti"><div class="sth"><div class="stn" style="background:rgba(77,163,255,.15);color:var(--bl)">2</div><div class="stt">Monetisasi audiens saves - 70K hot leads per bulan yang diabaikan</div></div><div class="stb">Mulai sekarang: setiap konten Feed harus punya kalimat di slide terakhir atau caption yang menghubungkan ke produk relevan. "Benih tomat premium yang kami pakai ada di bio link." Ini konversi paling organik yang ada.</div><div class="stgs"><span class="stg" style="background:rgba(0,214,143,.15);color:var(--gn)">MOFU ke BOFU</span><span class="stg" style="background:rgba(255,184,0,.15);color:var(--am)">Quick win minggu ini</span></div></div>
+  <div class="sti"><div class="sth"><div class="stn" style="background:rgba(0,214,143,.15);color:var(--gn)">3</div><div class="stt">Aktifkan Stories sebagai channel konversi harian</div></div><div class="stb">Stories adalah satu-satunya format Instagram yang memungkinkan link langsung ke Shopee. Target: 3 Stories per hari - 1 promo dengan link sticker ke Shopee, 1 BTS, 1 reshare Feed terpopuler.</div><div class="stgs"><span class="stg" style="background:rgba(225,48,108,.15);color:#E1306C">STORIES</span><span class="stg" style="background:rgba(255,107,53,.15);color:#ff6b35">BOFU</span><span class="stg" style="background:rgba(255,184,0,.15);color:var(--am)">Mulai hari ini</span></div></div>
+  <div class="sti"><div class="sth"><div class="stn" style="background:rgba(255,184,0,.15);color:var(--am)">4</div><div class="stt">Buat BOFU versi Feed - jangan taruh produk di Reels</div></div><div class="stb">Hampir semua konten produk ada di Reels - format yang performanya paling rendah. Strategi: carousel produk dengan formula Feed viral. Edukasi 6 slide, produk di slide 7, CTA di slide 8.</div><div class="stgs"><span class="stg" style="background:rgba(225,48,108,.15);color:#E1306C">FEED</span><span class="stg" style="background:rgba(255,107,53,.15);color:#ff6b35">BOFU</span></div></div>
+  <div class="sti"><div class="sth"><div class="stn" style="background:rgba(155,109,255,.15);color:var(--pu)">5</div><div class="stt">Repurpose konten viral ke format yang mengaktifkan link bio</div></div><div class="stb">Stroberi (1.85M) dan petani Inggris (1.14M) sudah viral tapi tidak ada jalur konversi. Buat Story follow-up yang merujuk ke konten feed + link ke toko. Buat Highlight "Produk kami" yang mengumpulkan semua link.</div><div class="stgs"><span class="stg" style="background:rgba(77,163,255,.15);color:var(--bl)">TOFU ke BOFU</span></div></div>
+</div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Roadmap 4 minggu Instagram</div><div class="rm">
+  <div class="rmi"><div class="rmd" style="background:rgba(225,48,108,.15);color:#E1306C">1</div><div class="rmc"><div class="rmw">Minggu 1 - Aktifkan channel yang kosong</div><div class="rmt">3 Stories harian dimulai + audit konten produk yang ada</div><div class="rmd2">Mulai 3 Stories/hari: 1 promo+link sticker, 1 BTS, 1 reshare Feed. Buat Highlight "Produk kami". Tambah kalimat produk di caption konten populer yang ada.</div></div></div>
+  <div class="rmi"><div class="rmd" style="background:rgba(77,163,255,.15);color:var(--bl)">2</div><div class="rmc"><div class="rmw">Minggu 2 - Balik rasio Feed vs Reels</div><div class="rmt">3 Feed BOFU-hybrid + kurangi Reels tanpa ide kuat</div><div class="rmd2">Buat 3 carousel produk: edukasi 6 slide, produk di slide 7, CTA slide 8. Target: NPK humat, cocopeat, benih premium.</div></div></div>
+  <div class="rmi"><div class="rmd" style="background:rgba(0,214,143,.15);color:var(--gn)">3</div><div class="rmc"><div class="rmw">Minggu 3 - Monetisasi saves & follow up viral</div><div class="rmt">Follow-up 3 konten viral + seri MOFU Feed pertama</div><div class="rmd2">Story follow-up konten viral yang menghubungkan ke produk. Carousel MOFU "hasil kebun pembeli Infarm 30 hari."</div></div></div>
+  <div class="rmi" style="padding-bottom:0"><div class="rmd" style="background:rgba(255,184,0,.15);color:var(--am)">4</div><div class="rmc"><div class="rmw">Minggu 4 - Evaluasi & scale</div><div class="rmt">Review data Feed vs Reels + optimasi bulan berikutnya</div><div class="rmd2">Bandingkan performa Feed baru vs Reels. Evaluasi Stories: berapa link sticker menghasilkan klik ke toko.</div></div></div>
+</div></div>
+</div>
+
+<div class="pg" id="ig-bs">
+<div class="bsh" style="background:linear-gradient(135deg,rgba(225,48,108,.08),rgba(131,58,180,.06));border:1px solid rgba(225,48,108,.2)"><div class="bshl" style="color:#E1306C">Analisis blind spot Instagram</div><div class="bsht">9 area tersembunyi yang membatasi potensi @infarm.id secara diam-diam</div><div class="bshd">Blind spot Instagram berbeda dari TikTok - platform ini punya mekanisme konversi unik (saves, Stories link, carousel swipe) yang jika diabaikan memotong jalur dari awareness ke pembelian.</div></div>
+<div class="sec"><div class="sl">9 blind spot kritis Instagram</div><div class="bsg">
+  <div class="bsc" style="--bsa:#ff4d4d"><div class="bsci" style="background:rgba(255,77,77,.1)">&#128208;</div><div class="bstg" style="background:rgba(255,77,77,.15);color:#ff9090">Kritis</div><div class="bscn">63% Reels padahal Feed 3x lebih kuat - misalokasi sumber daya besar</div><div class="bscb">63% sumber daya produksi untuk Reels, padahal Feed rata-rata 3x lebih banyak views dan 2x lebih tinggi ER. Ini misalokasi yang bisa langsung diperbaiki minggu depan.</div><div class="bsev"><strong>Data:</strong> 84 Reels avg 83K views vs 49 Feed avg <strong>240K views</strong>. Jika 20 Reels dialihkan ke Feed: <strong>+3.1M views per periode</strong>.</div><div class="bsim">Dampak: <strong>Jutaan views potensial terbuang karena format yang salah</strong></div></div>
+  <div class="bsc" style="--bsa:#ff4d4d"><div class="bsci" style="background:rgba(255,77,77,.1)">&#128190;</div><div class="bstg" style="background:rgba(255,77,77,.15);color:#ff9090">Kritis</div><div class="bscn">70K+ saves tidak pernah dikonversi ke produk Infarm</div><div class="bscb">Orang yang menyimpan konten adalah audiens paling berniat di Instagram. Tapi tidak ada satu pun konten dengan saves tinggi yang punya jalur ke produk Infarm.</div><div class="bsev"><strong>Data:</strong> Stroberi: <strong>5.506 saves</strong>. Total saves 28 hari: <strong>70K+</strong> - semua tanpa CTA ke produk.</div><div class="bsim">Dampak: <strong>70K+ hot leads per bulan tidak dikaptalisasi</strong></div></div>
+  <div class="bsc" style="--bsa:#ff4d4d"><div class="bsci" style="background:rgba(255,77,77,.1)">&#128279;</div><div class="bstg" style="background:rgba(255,77,77,.15);color:#ff9090">Kritis</div><div class="bscn">Stories hampir nol - satu-satunya format dengan link langsung ke toko</div><div class="bscb">Di Instagram, link langsung hanya bisa lewat Stories link sticker. Feed tidak bisa klik link. Reels tidak bisa klik link. Stories hampir nol = tidak ada jalur konversi langsung.</div><div class="bsev"><strong>Data:</strong> 0 Stories terdata dari 133 konten. Feed punya 1.85M views tapi tidak ada jalur konversi.</div><div class="bsim">Dampak: <strong>Konversi dari 20M+ views per bulan mendekati nol</strong></div></div>
+  <div class="bsc" style="--bsa:#ffb800"><div class="bsci" style="background:rgba(255,184,0,.1)">&#128260;</div><div class="bstg" style="background:rgba(255,184,0,.15);color:#ffd060">Tinggi</div><div class="bscn">22K+ reposts/bulan tanpa branding yang terbaca</div><div class="bscb">Rata-rata 800+ reposts per hari - ratusan akun lain menyebarkan konten Infarm ke Stories mereka. Distribusi gratis yang berharga. Tapi tidak ada watermark - audiens yang melihat tidak tahu itu dari Infarm.</div><div class="bsev"><strong>Data:</strong> Total reposts 28 hari: <strong>~22.000+</strong>. Tanpa watermark, tidak ada brand awareness yang tertinggal.</div><div class="bsim">Dampak: <strong>22K+ distribusi gratis tanpa brand awareness tertinggal</strong></div></div>
+  <div class="bsc" style="--bsa:#ffb800"><div class="bsci" style="background:rgba(255,184,0,.1)">&#128202;</div><div class="bstg" style="background:rgba(255,184,0,.15);color:#ffd060">Tinggi</div><div class="bscn">Konten BOFU di format salah - semua produk di Reels yang terlemah</div><div class="bscb">Konten edukasi viral ada di Feed, konten produk ada di Reels. Kebalikan dari yang seharusnya. Konten yang paling perlu dikonversi justru di format yang paling sedikit reach-nya.</div><div class="bsev"><strong>Data:</strong> Low performers semua Reels produk: "Rahasia nanam sukses" 14K, "Hemat uang belanjaan" 16K.</div><div class="bsim">Dampak: <strong>Konten produk hanya menjangkau 5-10% dari audiens Feed</strong></div></div>
+  <div class="bsc" style="--bsa:#ffb800"><div class="bsci" style="background:rgba(255,184,0,.1)">&#128717;</div><div class="bstg" style="background:rgba(255,184,0,.15);color:#ffd060">Tinggi</div><div class="bscn">Instagram Shopping tidak aktif - missed fitur konversi terpenting</div><div class="bscb">Instagram Shopping Tag memungkinkan produk di-tag langsung di foto/carousel - pengguna bisa klik dan langsung ke halaman beli tanpa keluar dari Instagram.</div><div class="bsev"><strong>Data:</strong> Jika Shopping Tag aktif di stroberi (1.85M views) dengan CTR 0.05%: <strong>925 product page views</strong> dari 1 konten.</div><div class="bsim">Dampak: <strong>Fitur konversi terkuat Instagram tidak digunakan</strong></div></div>
+  <div class="bsc" style="--bsa:#4da3ff"><div class="bsci" style="background:rgba(77,163,255,.1)">&#128204;</div><div class="bstg" style="background:rgba(77,163,255,.15);color:#80c4ff">Sedang</div><div class="bscn">Profil tidak dioptimasi sebagai mini toko</div><div class="bscb">Instagram memungkinkan 3 pinned post dan Highlights sebagai showcase permanen. Pinned post ideal: 1 konten viral terkuat, 1 carousel produk, 1 testimoni. Highlights: Produk, Cara Beli, Testimoni.</div><div class="bsev"><strong>Data:</strong> Stroberi (1.85M views) adalah social proof terkuat. Jika tidak dipasang sebagai pinned, visitor baru tidak langsung melihatnya.</div><div class="bsim">Dampak: <strong>First impression profil tidak mengkonversi visitor baru</strong></div></div>
+  <div class="bsc" style="--bsa:#4da3ff"><div class="bsci" style="background:rgba(77,163,255,.1)">&#128197;</div><div class="bstg" style="background:rgba(77,163,255,.15);color:#80c4ff">Sedang</div><div class="bscn">Tidak ada konten memanfaatkan momen musiman Indonesia</div><div class="bscb">Konten Infarm hampir sepenuhnya topik-driven tanpa koneksi ke momen aktual Indonesia - Ramadan, musim hujan, panen raya, hari lingkungan hidup.</div><div class="bsev"><strong>Data:</strong> Dari 133 konten, tidak ada yang mengaitkan dengan momen Indonesia Juni 2026. Konten momen berpotensi 2x lebih tinggi distribusi organik.</div><div class="bsim">Dampak: <strong>Potensi distribusi 2x lebih tinggi dari momen yang terlewat</strong></div></div>
+  <div class="bsc" style="--bsa:#9b6dff"><div class="bsci" style="background:rgba(155,109,255,.1)">&#129309;</div><div class="bstg" style="background:rgba(155,109,255,.15);color:#c4a0ff">Sedang</div><div class="bscn">UGC tidak dikumpulkan - 22K reposts = potential testimonials</div><div class="bscb">22K+ reposts/bulan = banyak pelanggan sudah organik berbagi konten Infarm. Tapi tidak ada yang dikurasi jadi UGC resmi - foto before-after, testimonial, atau konten kebun pelanggan.</div><div class="bsev"><strong>Data:</strong> Jika 1% dari reposter adalah pelanggan dengan produk Infarm = <strong>220 potential UGC testimonials</strong> per bulan yang tidak dikumpulkan.</div><div class="bsim">Dampak: <strong>220+ potential UGC per bulan tidak diaktifkan</strong></div></div>
+</div></div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Matriks prioritas Instagram</div><div class="bsmt"><table><thead><tr><th style="width:170px">Blind Spot</th><th style="width:72px">Severity</th><th style="width:88px">Mudah?</th><th style="width:112px">Dampak</th><th>Langkah pertama</th></tr></thead><tbody>
+  <tr><td>Stories hampir nol</td><td><span class="sk skk">Kritis</span></td><td style="color:var(--gn)">Sangat tinggi</td><td style="color:var(--gn)">Konversi langsung</td><td>Buat 3 Stories hari ini dengan link sticker ke Shopee</td></tr>
+  <tr><td>70K saves tidak dikonversi</td><td><span class="sk skk">Kritis</span></td><td style="color:var(--gn)">Tinggi</td><td style="color:var(--gn)">Revenue langsung</td><td>Tambah slide terakhir "produk kami" di 5 carousel saves tertinggi</td></tr>
+  <tr><td>63% Reels vs Feed lebih kuat</td><td><span class="sk skk">Kritis</span></td><td style="color:var(--gn)">Tinggi</td><td style="color:var(--bl)">+3M views/periode</td><td>Minggu ini: 4 Feed untuk setiap 2 Reels yang diproduksi</td></tr>
+  <tr><td>BOFU di format salah</td><td><span class="sk skt">Tinggi</span></td><td style="color:var(--gn)">Tinggi</td><td style="color:var(--gn)">Revenue jangka menengah</td><td>Buat 1 carousel produk dengan formula Feed viral minggu ini</td></tr>
+  <tr><td>22K reposts tanpa branding</td><td><span class="sk skt">Tinggi</span></td><td style="color:var(--gn)">Sangat tinggi</td><td style="color:var(--bl)">Brand awareness</td><td>Tambah logo + handle @infarm.id di semua slide konten baru</td></tr>
+  <tr><td>Instagram Shopping tidak aktif</td><td><span class="sk skt">Tinggi</span></td><td style="color:var(--am)">Sedang</td><td style="color:var(--gn)">Konversi langsung</td><td>Aktifkan Instagram Shopping di pengaturan akun bisnis</td></tr>
+  <tr><td>Profil tidak dioptimasi</td><td><span class="sk sks">Sedang</span></td><td style="color:var(--gn)">Sangat tinggi</td><td style="color:var(--bl)">First impression</td><td>Pin 3 konten terbaik + buat Highlights Produk dan Testimoni hari ini</td></tr>
+</tbody></table></div></div>
+<div class="dv"></div>
+<div class="sec"><div class="sl">Peluang tersembunyi Instagram</div>
+  <div class="bso"><div class="bson">1</div><div><div class="bsot">Jika 3 Stories per hari diaktifkan dengan link sticker ke Shopee</div><div class="bsob">Stories adalah jalur konversi paling langsung di Instagram. Dengan reach harian 200K-700K, bahkan conversion rate 0.01% menghasilkan 20-70 klik ke toko per hari atau 600-2.100 klik per bulan tanpa konten tambahan.</div><div class="bsow">Estimasi dampak: 600-2.100 klik toko per bulan hanya dari Stories, gratis</div></div></div>
+  <div class="bso"><div class="bson">2</div><div><div class="bsot">Jika rasio Feed ditingkatkan dari 37% ke 55%</div><div class="bsob">Memindahkan 20 slot Reels ke Feed per bulan, dengan avg views Feed 240K, berarti +4.8M views tambahan per periode - hanya dari perubahan format, tanpa mengubah topik atau kualitas konten apapun.</div><div class="bsow">Estimasi dampak: +4.8M views per periode hanya dari perubahan format pilihan</div></div></div>
+  <div class="bso"><div class="bson">3</div><div><div class="bsot">Jika 70K saves per bulan diarahkan ke produk via slide terakhir carousel</div><div class="bsob">Jika setiap carousel punya slide terakhir yang menampilkan produk relevan, dan hanya 1% dari 70K orang yang save mengklik, ini setara 700 high-intent visitors ke toko per bulan.</div><div class="bsow">Estimasi dampak: 700+ high-intent visitors dari audiens saves yang selama ini diabaikan</div></div></div>
+  <div class="bso"><div class="bson">4</div><div><div class="bsot">Jika watermark @infarm.id konsisten dan 22K reposts jadi iklan gratis</div><div class="bsob">22K+ reposts/bulan = ribuan akun mendistribusikan konten Infarm. Jika setiap konten ada watermark @infarm.id yang terbaca, setiap repost jadi mini-advertisement. Dengan 0.5% yang mencari akun tersebut, ini 5.500+ potential new profile visitors per bulan.</div><div class="bsow">Estimasi dampak: 5.500+ potential new profile visitors per bulan dari distribusi yang sudah berjalan</div></div></div>
+</div>
+</div>
+
+</div><!-- end pv-ig -->
+
+</main>
+</div>
+<script>
+// ── DATA TT ─────────────────────────────────────────────────────────────────
+var TTD=[];
+var TTV=[];
+var IGD=[];
+var IGP=[];
+
+// ── LIVE DATA FETCH (Windsor.ai via Vercel serverless function) ───────────────
+var dataLoaded={tt:false,ig:false};
+var loadingEl=null;
+
+function showLoading(msg){
+  if(!loadingEl){
+    loadingEl=document.createElement('div');
+    loadingEl.id='loading-banner';
+    loadingEl.style.cssText='position:fixed;top:0;left:0;right:0;z-index:999;background:#1a1a1a;color:#a0a0a0;text-align:center;padding:6px;font-size:11px;border-bottom:1px solid rgba(255,255,255,.1)';
+    document.body.prepend(loadingEl);
+  }
+  loadingEl.textContent=msg;
+  loadingEl.style.display='block';
+}
+function hideLoading(){ if(loadingEl) loadingEl.style.display='none'; }
+
+async function fetchPlatformData(platform){
+  var resp=await fetch('/api/data?platform='+platform);
+  if(!resp.ok){
+    var errBody=await resp.json().catch(function(){return{error:'Unknown error'}});
+    throw new Error(errBody.error||('HTTP '+resp.status));
+  }
+  return resp.json();
+}
+
+function mapTTDaily(rows){
+  return rows.map(function(r){
+    return{
+      date:r.date,
+      lk:Number(r.likes||0),
+      cm:Number(r.comments||0),
+      sh:Number(r.shares||0),
+      pv:Number(r.profile_views||0),
+      vv:Number(r.unique_video_views||0),
+      fw:Number(r.followers_count||0),
+      eg:Number(r.engaged_audience||0)
+    };
+  });
+}
+function mapTTVideos(rows){
+  return rows.map(function(r){
+    return{
+      cap:r.video_caption||'(tanpa caption)',
+      views:Number(r.video_views_count||0),
+      lk:Number(r.video_likes||0),
+      cm:Number(r.video_comments||0),
+      sh:Number(r.video_shares||0),
+      fav:Number(r.video_favorites||0),
+      nf:Number(r.video_new_followers||0),
+      wr:Number(r.video_full_watched_rate||0),
+      aw:Number(r.video_average_time_watched||0),
+      pv:Number(r.video_profile_views||0),
+      type:'TOFU',
+      thumb:r.video_thumbnail_url||''
+    };
+  });
+}
+function mapIGDaily(rows){
+  return rows.map(function(r){
+    return{
+      date:r.date,
+      views:Number(r.video_views_count||0),
+      likes:Number(r.likes||0),
+      comments:Number(r.comments||0),
+      shares:Number(r.shares||0),
+      saves:Number(r.saves||0),
+      reach:Number(r.reach||0),
+      follower_count:Number(r.followers_count||0),
+      reposts:Number(r.reposts||0)
+    };
+  });
+}
+function mapIGPosts(rows){
+  return rows.map(function(r){
+    return{
+      cap:r.caption||'(tanpa caption)',
+      views:Number(r.video_views_count||0),
+      lk:Number(r.video_likes||0),
+      cm:Number(r.video_comments||0),
+      sv:Number(r.saves||0),
+      sh:Number(r.video_shares||0),
+      reach:Number(r.reach||0),
+      eng:Number(r.video_likes||0)+Number(r.video_comments||0)+Number(r.video_shares||0)+Number(r.saves||0),
+      aw:0,
+      type:(r.media_type||'FEED').toUpperCase().indexOf('REEL')>-1?'REELS':'FEED'
+    };
+  });
+}
+
+async function loadLiveData(){
+  showLoading('Memuat data terbaru dari Windsor.ai...');
+  try{
+    var ttResp=await fetchPlatformData('tiktok');
+    TTD=mapTTDaily(ttResp.daily);
+    TTV=mapTTVideos(ttResp.content);
+    dataLoaded.tt=true;
+  }catch(e){
+    console.error('Gagal load data TikTok:',e);
+    showLoading('Gagal memuat data TikTok: '+e.message+' (cek Vercel env var WINDSOR_API_KEY)');
+    setTimeout(hideLoading,6000);
+  }
+  try{
+    var igResp=await fetchPlatformData('instagram');
+    IGD=mapIGDaily(igResp.daily);
+    IGP=mapIGPosts(igResp.content);
+    dataLoaded.ig=true;
+  }catch(e){
+    console.error('Gagal load data Instagram:',e);
+  }
+  if(dataLoaded.tt||dataLoaded.ig){
+    hideLoading();
+    var allDates2=TTD.map(function(x){return x.date}).sort();
+    if(allDates2.length){
+      document.getElementById('df').value=allDates2[0];
+      document.getElementById('dt').value=allDates2[allDates2.length-1];
+    }
+    if(plat==='tt') rTT(); else rIG();
+  }
+}
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+var plat='tt', ttCh=null, igCh=null, ttM='vv', igM='views', dFrom=null, dTo=null;
+function fmt(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return Math.round(n).toString()}
+function ttER(v){return v.views?((v.lk+v.cm+v.sh+v.fav)/v.views*100):0}
+function igER(p){return p.reach?((p.eng/p.reach)*100):0}
+function fTT(){var d=TTD.slice();if(dFrom&&dTo)d=d.filter(function(x){return x.date>=dFrom&&x.date<=dTo});return{d:d,v:TTV}}
+function fIG(){var d=IGD.slice();if(dFrom&&dTo)d=d.filter(function(x){return x.date>=dFrom&&x.date<=dTo});return{d:d,p:IGP}}
+
+// ── PLATFORM SWITCH ──────────────────────────────────────────────────────────
+function SP(p){
+  plat=p;var isTT=p==='tt';
+  document.getElementById('pv-tt').classList.toggle('on',isTT);
+  document.getElementById('pv-ig').classList.toggle('on',!isTT);
+  document.getElementById('nav-tt').style.display=isTT?'':'none';
+  document.getElementById('nav-ig').style.display=isTT?'none':'';
+  document.getElementById('btn-tt').className='psb'+(isTT?' on':'');
+  document.getElementById('btn-ig').className='psb'+(!isTT?' ig-on':'');
+  document.getElementById('sb-ic').style.background=isTT?'linear-gradient(135deg,#ff2d55,#ff6b35)':'linear-gradient(135deg,#833AB4,#E1306C)';
+  document.getElementById('sb-t').textContent=isTT?'@infarmid':'@infarm.id';
+  document.getElementById('sb-s').textContent=isTT?'TikTok Dashboard':'Instagram Dashboard';
+  document.getElementById('ft-d').textContent=isTT?'Data: 2-27 Jun 2026':'Data: 2-28 Jun 2026';
+  document.getElementById('ft-s').textContent=isTT?'Windsor.ai TikTok Organic':'Windsor.ai Instagram Organic';
+  var pb=document.getElementById('pb');
+  if(isTT){pb.textContent='TikTok';pb.style.background='rgba(255,45,85,.15)';pb.style.color='#ff2d55';}
+  else{pb.textContent='Instagram';pb.style.background='linear-gradient(135deg,rgba(131,58,180,.2),rgba(225,48,108,.2))';pb.style.color='#E1306C';}
+  document.querySelectorAll('.pbt.on').forEach(function(b){b.style.background=isTT?'#ff2d55':'#E1306C'});
+  if(isTT)rTT();else rIG();
+}
+
+// ── PAGE SWITCH ───────────────────────────────────────────────────────────────
+function PG(p,id,btn){
+  document.querySelectorAll('#pv-'+p+' .pg').forEach(function(pg){pg.classList.remove('on')});
+  document.getElementById(p+'-'+id).classList.add('on');
+  document.querySelectorAll('#nav-'+p+' .ni').forEach(function(b){b.classList.remove('on')});
+  btn.classList.add('on');
+}
+
+// ── CHART ────────────────────────────────────────────────────────────────────
+function mkCh(ctx,labels,data,col,lbl,isEr){
+  return new Chart(ctx,{type:'line',data:{labels:labels,datasets:[{label:lbl,data:data,borderColor:col,backgroundColor:col+'18',fill:true,tension:0.3,pointRadius:2,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a1a',borderColor:'#333',borderWidth:1,titleColor:'#a0a0a0',bodyColor:'#f0f0f0',callbacks:{label:function(c){return isEr?c.parsed.y.toFixed(2)+'%':fmt(c.parsed.y)}}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#606060',font:{size:10},maxTicksLimit:10,maxRotation:0}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#606060',font:{size:10},callback:function(v){return isEr?v.toFixed(1)+'%':fmt(v)}}}}}});
+}
+var TTM={vv:['#ff2d55','Views'],lk:['#ff4d4d','Likes'],fw:['#00d68f','Followers baru'],er:['#ffb800','ER%'],eg:['#9b6dff','Penonton aktif'],pv:['#4da3ff','Profile views']};
+var IGM={views:['#E1306C','Views'],likes:['#ff4d4d','Likes'],saves:['#ffb800','Saves'],shares:['#9b6dff','Shares'],reach:['#833AB4','Reach'],follower_count:['#00d68f','Followers baru'],er:['#4da3ff','ER%']};
+
+function ttSM(btn){
+  document.querySelectorAll('#tt-mf .mfb').forEach(function(b){b.classList.remove('on')});
+  btn.classList.add('on');ttM=btn.dataset.m;
+  var d=fTT().d,cfg=TTM[ttM]||['#ff2d55','Views'],isEr=ttM==='er';
+  var data=isEr?d.map(function(x){return x.vv?((x.lk+Math.max(0,x.cm)+x.sh)/x.vv*100):0}):d.map(function(x){return x[ttM]||0});
+  if(ttCh)ttCh.destroy();
+  ttCh=mkCh(document.getElementById('tt-ch').getContext('2d'),d.map(function(x){return x.date.slice(5)}),data,cfg[0],cfg[1],isEr);
+}
+function igSM(btn){
+  document.querySelectorAll('#ig-mf .mfb').forEach(function(b){b.classList.remove('ig-on');b.classList.remove('on')});
+  btn.classList.add('ig-on');igM=btn.dataset.m;
+  var d=fIG().d,cfg=IGM[igM]||['#E1306C','Views'],isEr=igM==='er';
+  var data=isEr?d.map(function(x){return x.reach?((x.likes+x.comments+x.shares+x.saves)/x.reach*100):0}):d.map(function(x){return x[igM]||0});
+  if(igCh)igCh.destroy();
+  igCh=mkCh(document.getElementById('ig-ch').getContext('2d'),d.map(function(x){return x.date.slice(5)}),data,cfg[0],cfg[1],isEr);
+}
+
+// ── TT RENDERS ───────────────────────────────────────────────────────────────
+function rTTKPI(d){
+  var tv=d.reduce(function(s,x){return s+x.vv},0),tl=d.reduce(function(s,x){return s+x.lk},0);
+  var tc=d.reduce(function(s,x){return s+Math.max(0,x.cm)},0),ts=d.reduce(function(s,x){return s+x.sh},0);
+  var tf=d.reduce(function(s,x){return s+x.fw},0),tpv=d.reduce(function(s,x){return s+x.pv},0);
+  var te=d.reduce(function(s,x){return s+x.eg},0),er=tv?((tl+tc+ts)/tv*100):0;
+  document.getElementById('tt-kpi').innerHTML=[
+    {l:'Total views',v:fmt(tv),c:'#ff2d55'},{l:'Total likes',v:fmt(tl),c:'var(--rd)'},
+    {l:'Komentar',v:fmt(tc),c:'var(--bl)'},{l:'Shares',v:fmt(ts),c:'var(--pu)'},
+    {l:'Followers baru',v:fmt(tf),c:'var(--gn)'},{l:'ER% rata-rata',v:er.toFixed(2)+'%',c:'var(--am)'},
+    {l:'Profile views',v:fmt(tpv),c:'var(--bl)'},{l:'Penonton aktif',v:fmt(te),c:'var(--gn)'}
+  ].map(function(k){return '<div class="kc" style="--kac:'+k.c+'"><div class="kl">'+k.l+'</div><div class="kv">'+k.v+'</div><div class="ks">'+d.length+' hari</div></div>'}).join('');
+}
+function rTTFn(v){
+  var c={TOFU:0,MOFU:0,BOFU:0};v.forEach(function(x){c[x.type]=(c[x.type]||0)+1});
+  var t=v.length||1,cl={TOFU:'var(--bl)',MOFU:'var(--gn)',BOFU:'#ff6b35'};
+  document.getElementById('tt-fn').innerHTML=['TOFU','MOFU','BOFU'].map(function(f){var p=Math.round((c[f]||0)/t*100);return'<div class="fr"><div class="fl">'+f+'</div><div class="ft"><div class="ff" style="width:'+p+'%;background:'+cl[f]+'"></div></div><div class="fv">'+(c[f]||0)+' ('+p+'%)</div></div>'}).join('');
+  document.getElementById('tt-ft').textContent='Total: '+v.length+' konten';
+}
+function rTTSg(d){
+  var tv=d.reduce(function(s,x){return s+x.vv},0),tl=d.reduce(function(s,x){return s+x.lk},0);
+  var tc=d.reduce(function(s,x){return s+Math.max(0,x.cm)},0),ts=d.reduce(function(s,x){return s+x.sh},0);
+  var er=tv?((tl+tc+ts)/tv*100):0;
+  document.getElementById('tt-sg').innerHTML=[
+    {c:'#ff4d4d',t:'MOFU hampir nol — tidak ada konten trust-building yang mengubah penonton menjadi pembeli.'},
+    {c:'var(--am)',t:'ER% '+er.toFixed(2)+'% — konten fakta alam 5-10x outperform dibanding promo eksplisit.'},
+    {c:'#ff4d4d',t:'Konten produk dengan opening langsung jualan hanya mendapat 1K-10K views.'},
+    {c:'var(--gn)',t:'Formula viral: gulma 752K, serangga 86K, cengkeh 78K — wajib direplikasi mingguan.'},
+    {c:'var(--bl)',t:'Total views 28 hari: '+fmt(tv)+' — reach kuat tapi konversi ke toko sangat minim.'}
+  ].map(function(i){return'<div class="sig"><div class="sdot" style="background:'+i.c+'"></div><div>'+i.t+'</div></div>'}).join('');
+}
+function rTTTbl(v){
+  var bc=function(t){return t==='TOFU'?'bt':t==='MOFU'?'bm':'bb'};
+  var s=v.slice().sort(function(a,b){return b.views-a.views});
+  document.getElementById('tt-tp').innerHTML=s.slice(0,5).map(function(x,i){
+    var er=ttER(x).toFixed(1),cap=x.cap.length>32?x.cap.slice(0,32)+'...':x.cap;
+    var ec=parseFloat(er)>3?'var(--gn)':parseFloat(er)>1.5?'var(--am)':'var(--rd)';
+    var wc=x.wr>0.15?'var(--gn)':x.wr>0.07?'var(--am)':'var(--rd)';
+    return'<tr><td style="color:var(--tx3);font-weight:600">'+(i+1)+'</td><td style="white-space:normal;font-size:10px;max-width:175px;line-height:1.4">'+cap+'</td><td style="font-weight:600">'+fmt(x.views)+'</td><td>'+fmt(x.lk)+'</td><td>'+fmt(x.sh)+'</td><td style="color:'+ec+'">'+er+'%</td><td style="color:'+wc+'">'+(x.wr*100).toFixed(0)+'%</td><td>'+x.aw.toFixed(1)+'s</td><td style="color:var(--gn)">'+fmt(x.nf)+'</td><td><span class="bd '+bc(x.type)+'">'+x.type+'</span></td></tr>';
+  }).join('');
+  document.getElementById('tt-lw').innerHTML=s.filter(function(x){return x.views<10000}).slice(0,5).map(function(x,i){
+    var iss=[];if(x.wr<0.05)iss.push('Hook lemah');if(x.aw<5)iss.push('Drop awal');if(x.cm===0)iss.push('Zero komentar');
+    return'<tr><td style="color:var(--tx3)">'+(i+1)+'</td><td style="white-space:normal;font-size:10px;max-width:165px">'+(x.cap.length>30?x.cap.slice(0,30)+'...':x.cap)+'</td><td style="color:var(--rd);font-weight:600">'+fmt(x.views)+'</td><td style="color:var(--rd)">'+ttER(x).toFixed(1)+'%</td><td style="color:var(--rd)">'+(x.wr*100).toFixed(0)+'%</td><td>'+x.aw.toFixed(1)+'s</td><td style="font-size:10px;color:var(--tx2);white-space:normal">'+(iss.join(' | ')||'—')+'</td></tr>';
+  }).join('');
+  document.getElementById('tt-kk').innerHTML=v.slice().sort(function(a,b){return(b.pv/Math.max(b.views,1))-(a.pv/Math.max(a.views,1))}).slice(0,5).map(function(x,i){
+    var cvr=x.views?((x.pv/x.views)*100).toFixed(2):0;
+    return'<tr><td style="color:var(--tx3)">'+(i+1)+'</td><td style="white-space:normal;font-size:10px;max-width:190px">'+(x.cap.length>34?x.cap.slice(0,34)+'...':x.cap)+'</td><td>'+fmt(x.views)+'</td><td style="color:var(--gn);font-weight:600">'+fmt(x.pv)+'</td><td style="font-weight:700;color:var(--bl)">'+cvr+'%</td><td><span class="bd '+bc(x.type)+'">'+x.type+'</span></td></tr>';
+  }).join('');
+}
+function rTTAc(v){
+  var avgER=v.reduce(function(s,x){return s+ttER(x)},0)/(v.length||1);
+  var maxV=Math.max.apply(null,v.map(function(x){return x.views}));
+  document.getElementById('tt-ac').innerHTML=v.slice().sort(function(a,b){return b.views-a.views}).map(function(x){
+    var er=ttER(x),str=[],wk=[];
+    if(x.wr>0.15)str.push('Watch rate tinggi');if(er>avgER*1.5)str.push('ER tinggi');if(x.nf>20)str.push('Follower magnet');if(x.sh>50)str.push('Viral share');
+    if(x.wr<0.05)wk.push('Hook lemah');if(x.aw<5)wk.push('Drop awal');if(er<avgER*0.5)wk.push('ER rendah');if(x.views<5000)wk.push('Reach rendah');
+    var bc=x.type==='TOFU'?'bt':x.type==='MOFU'?'bm':'bb';
+    var ec=er>3?'var(--gn)':er>1.5?'var(--am)':'var(--rd)',wc=x.wr>0.15?'var(--gn)':x.wr>0.07?'var(--am)':'var(--rd)';
+    return'<div class="vc"><div style="width:40px;height:40px;border-radius:6px;background:var(--sf2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">&#127925;</div><div style="flex:1;min-width:0"><div class="vcp">'+x.cap+'</div><div class="vm"><div class="vmi">Views <span class="vmv">'+fmt(x.views)+'</span></div><div class="vmi">Watch <span class="vmv" style="color:'+wc+'">'+(x.wr*100).toFixed(0)+'%</span></div><div class="vmi">Avg <span class="vmv">'+x.aw.toFixed(1)+'s</span></div><div class="vmi">ER <span class="vmv" style="color:'+ec+'">'+er.toFixed(1)+'%</span></div><div class="vmi">Foll+ <span class="vmv" style="color:var(--gn)">'+x.nf+'</span></div><span class="bd '+bc+'">'+x.type+'</span></div><div class="vb"><div class="vbg"><div class="vbl">Views</div><div class="vbt"><div class="vbf" style="width:'+Math.round(x.views/maxV*100)+'%;background:#ff2d55"></div></div><div class="vbv">'+fmt(x.views)+'</div></div><div class="vbg"><div class="vbl">Watch%</div><div class="vbt"><div class="vbf" style="width:'+Math.round(Math.min(x.wr/0.6,1)*100)+'%;background:'+wc+'"></div></div><div class="vbv" style="color:'+wc+'">'+(x.wr*100).toFixed(0)+'%</div></div><div class="vbg"><div class="vbl">ER</div><div class="vbt"><div class="vbf" style="width:'+Math.round(Math.min(er/10,1)*100)+'%;background:'+ec+'"></div></div><div class="vbv" style="color:'+ec+'">'+er.toFixed(1)+'%</div></div></div><div class="vt">'+str.map(function(s){return'<span class="chip" style="background:rgba(0,214,143,.12);color:#60e0b4">'+s+'</span>'}).join('')+wk.map(function(w){return'<span class="chip" style="background:rgba(255,77,77,.12);color:#ff9090">'+w+'</span>'}).join('')+'</div></div></div>';
+  }).join('');
+}
+function rTTSc(){
+  var scores=[{s:80,c:'var(--bl)',t:'Reach & views',sub:'100K-400K/hari konsisten'},{s:70,c:'var(--gn)',t:'Engagement quality',sub:'ER 2-4% rata-rata harian'},{s:30,c:'var(--rd)',t:'Konversi ke toko',sub:'BOFU <15%, MOFU ~0%'},{s:60,c:'var(--am)',t:'Retensi video',sub:'Watch rate tidak merata'},{s:80,c:'var(--pu)',t:'Konsistensi posting',sub:'3-4 konten/hari stabil'}];
+  document.getElementById('tt-sc2').innerHTML=scores.map(function(s){var dash=2*Math.PI*22*(1-s.s/100);return'<div class="sc"><div class="sr"><svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/><circle cx="28" cy="28" r="22" fill="none" stroke="'+s.c+'" stroke-width="5" stroke-dasharray="'+2*Math.PI*22+'" stroke-dashoffset="'+dash+'" stroke-linecap="round"/></svg><div class="sv">'+s.s+'</div></div><div class="sc-t">'+s.t+'</div><div class="sc-s">'+s.sub+'</div></div>'}).join('');
+}
+function rTT(){
+  var r=fTT(),d=r.d,v=r.v;
+  rTTKPI(d);rTTFn(v);rTTSg(d);rTTTbl(v);rTTAc(v);rTTSc();
+  var cfg=TTM[ttM]||['#ff2d55','Views'],isEr=ttM==='er';
+  var data=isEr?d.map(function(x){return x.vv?((x.lk+Math.max(0,x.cm)+x.sh)/x.vv*100):0}):d.map(function(x){return x[ttM]||0});
+  if(ttCh)ttCh.destroy();
+  ttCh=mkCh(document.getElementById('tt-ch').getContext('2d'),d.map(function(x){return x.date.slice(5)}),data,cfg[0],cfg[1],isEr);
+}
+
+// ── IG RENDERS ───────────────────────────────────────────────────────────────
+function rIGKPI(d){
+  var tv=d.reduce(function(s,x){return s+x.views},0),tl=d.reduce(function(s,x){return s+x.likes},0);
+  var tc=d.reduce(function(s,x){return s+x.comments},0),ts=d.reduce(function(s,x){return s+x.shares},0);
+  var tsv=d.reduce(function(s,x){return s+x.saves},0),tf=d.reduce(function(s,x){return s+x.follower_count},0);
+  var tr=d.reduce(function(s,x){return s+x.reach},0),trp=d.reduce(function(s,x){return s+x.reposts},0);
+  var er=tr?((tl+tc+ts+tsv)/tr*100):0;
+  document.getElementById('ig-kpi').innerHTML=[
+    {l:'Total views',v:fmt(tv),c:'#E1306C'},{l:'Total likes',v:fmt(tl),c:'var(--rd)'},
+    {l:'Saves',v:fmt(tsv),c:'var(--am)'},{l:'Shares',v:fmt(ts),c:'var(--pu)'},
+    {l:'Followers baru',v:fmt(tf),c:'var(--gn)'},{l:'ER% rata-rata',v:er.toFixed(2)+'%',c:'var(--bl)'},
+    {l:'Total reach',v:fmt(tr),c:'#833AB4'},{l:'Reposts',v:fmt(trp),c:'var(--gn)'}
+  ].map(function(k){return'<div class="kc" style="--kac:'+k.c+'"><div class="kl">'+k.l+'</div><div class="kv">'+k.v+'</div><div class="ks">'+d.length+' hari</div></div>'}).join('');
+}
+function rIGFn(p){
+  var fd=p.filter(function(x){return x.type==='FEED'}).length,rl=p.filter(function(x){return x.type==='REELS'}).length,t=p.length||1;
+  document.getElementById('ig-fn').innerHTML=[{l:'Feed',c:fd,col:'#E1306C'},{l:'Reels',c:rl,col:'#833AB4'}].map(function(f){var pct=Math.round(f.c/t*100);return'<div class="fr"><div class="fl">'+f.l+'</div><div class="ft"><div class="ff" style="width:'+pct+'%;background:'+f.col+'"></div></div><div class="fv">'+f.c+' ('+pct+'%)</div></div>'}).join('');
+  document.getElementById('ig-ft').textContent='Total: '+p.length+' konten';
+}
+function rIGSg(d,p){
+  var tsv=d.reduce(function(s,x){return s+x.saves},0),trp=d.reduce(function(s,x){return s+x.reposts},0);
+  var fd=p.filter(function(x){return x.type==='FEED'}).length,rl=p.filter(function(x){return x.type==='REELS'}).length;
+  document.getElementById('ig-sg').innerHTML=[
+    {c:'#ff4d4d',t:'Feed ('+fd+' post) avg 240K views vs Reels ('+rl+' post) avg 83K — format lebih sedikit tapi 3x lebih kuat.'},
+    {c:'var(--am)',t:'Total saves 28 hari: '+fmt(tsv)+' — audiens paling hangat yang belum diarahkan ke toko.'},
+    {c:'#ff4d4d',t:'Stories hampir nol — satu-satunya format Instagram dengan link langsung ke Shopee tidak digunakan.'},
+    {c:'var(--gn)',t:'Reposts '+fmt(trp)+' dalam 28 hari — disebarkan organik tapi tanpa branding yang terbaca.'},
+    {c:'var(--bl)',t:'ER% Feed 6.58% — jauh di atas benchmark Instagram niche pertanian 2-4%.'}
+  ].map(function(i){return'<div class="sig"><div class="sdot" style="background:'+i.c+'"></div><div>'+i.t+'</div></div>'}).join('');
+}
+function rIGTbl(p){
+  var s=p.slice().sort(function(a,b){return b.views-a.views});
+  document.getElementById('ig-tp').innerHTML=s.slice(0,10).map(function(x,i){
+    var er=igER(x).toFixed(1),bc=x.type==='FEED'?'bfd':'brl',ic=x.type==='FEED'?'&#128444;':'&#127909;';
+    var ec=parseFloat(er)>5?'var(--gn)':parseFloat(er)>2?'var(--am)':'var(--rd)';
+    var cap=x.cap.length>30?x.cap.slice(0,30)+'...':x.cap;
+    return'<tr><td style="color:var(--tx3);font-weight:600">'+(i+1)+'</td><td style="font-size:13px">'+ic+'</td><td style="white-space:normal;font-size:10px;max-width:175px;line-height:1.4">'+cap+'</td><td style="font-weight:600">'+fmt(x.views)+'</td><td>'+fmt(x.lk)+'</td><td style="color:var(--am);font-weight:500">'+fmt(x.sv)+'</td><td>'+fmt(x.sh)+'</td><td style="color:'+ec+'">'+er+'%</td><td>'+fmt(x.reach)+'</td><td><span class="bd '+bc+'">'+x.type+'</span></td></tr>';
+  }).join('');
+  var igErs=p.map(function(x){return igER(x)}).sort(function(a,b){return a-b}),med=igErs[Math.floor(igErs.length/2)]||0;
+  document.getElementById('ig-lw').innerHTML=p.filter(function(x){return x.views<30000&&igER(x)<med}).sort(function(a,b){return a.views-b.views}).slice(0,8).map(function(x,i){
+    var iss=[];if(x.views<15000)iss.push('Views rendah');if(x.sv<20)iss.push('Saves nol');if(x.type==='REELS')iss.push('Format underperform');
+    var bc=x.type==='FEED'?'bfd':'brl',cap=x.cap.length>28?x.cap.slice(0,28)+'...':x.cap;
+    return'<tr><td style="color:var(--tx3)">'+(i+1)+'</td><td style="white-space:normal;font-size:10px;max-width:160px">'+cap+'</td><td style="color:var(--rd);font-weight:600">'+fmt(x.views)+'</td><td style="color:var(--rd)">'+igER(x).toFixed(1)+'%</td><td>'+fmt(x.sv)+'</td><td><span class="bd '+bc+'">'+x.type+'</span></td><td style="font-size:10px;color:var(--tx2);white-space:normal">'+(iss.join(' | ')||'—')+'</td></tr>';
+  }).join('');
+  document.getElementById('ig-sv').innerHTML=p.slice().sort(function(a,b){return b.sv-a.sv}).slice(0,8).map(function(x,i){
+    var bc=x.type==='FEED'?'bfd':'brl',cap=x.cap.length>34?x.cap.slice(0,34)+'...':x.cap;
+    return'<tr><td style="color:var(--tx3)">'+(i+1)+'</td><td style="white-space:normal;font-size:10px;max-width:195px">'+cap+'</td><td>'+fmt(x.views)+'</td><td style="color:var(--am);font-weight:700;font-size:13px">'+fmt(x.sv)+'</td><td>'+fmt(x.sh)+'</td><td style="color:'+(igER(x)>5?'var(--gn)':'var(--am)')+'">'+igER(x).toFixed(1)+'%</td><td><span class="bd '+bc+'">'+x.type+'</span></td></tr>';
+  }).join('');
+}
+function rIGAc(p){
+  var avgER=p.reduce(function(s,x){return s+igER(x)},0)/(p.length||1);
+  var avgSv=p.reduce(function(s,x){return s+x.sv},0)/(p.length||1);
+  var maxV=Math.max.apply(null,p.map(function(x){return x.views}));
+  document.getElementById('ig-ac').innerHTML=p.slice().sort(function(a,b){return b.views-a.views}).slice(0,14).map(function(x){
+    var er=igER(x),str=[],wk=[];
+    if(er>avgER*1.3)str.push('ER tinggi');if(x.sv>avgSv*1.5)str.push('Banyak di-save');if(x.sh>500)str.push('Viral share');if(x.lk>15000)str.push('Likes tinggi');if(x.type==='FEED'&&x.views>300000)str.push('Feed top performer');
+    if(x.views<20000)wk.push('Reach rendah');if(er<1.5)wk.push('ER rendah');if(x.sv<20)wk.push('Saves nol');if(x.type==='REELS'&&x.views<50000)wk.push('Reels underperform');
+    var bc=x.type==='FEED'?'bfd':'brl',ic=x.type==='FEED'?'&#128444;':'&#127909;',ec=er>5?'var(--gn)':er>2?'var(--am)':'var(--rd)';
+    return'<div class="vc"><div style="width:40px;height:40px;border-radius:6px;background:var(--sf2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">'+ic+'</div><div style="flex:1;min-width:0"><div class="vcp">'+x.cap+'</div><div class="vm"><div class="vmi">Views <span class="vmv">'+fmt(x.views)+'</span></div><div class="vmi">Saves <span class="vmv" style="color:var(--am)">'+fmt(x.sv)+'</span></div><div class="vmi">ER <span class="vmv" style="color:'+ec+'">'+er.toFixed(1)+'%</span></div>'+(x.aw>0?'<div class="vmi">Avg <span class="vmv">'+x.aw+'s</span></div>':'')+'<span class="bd '+bc+'">'+x.type+'</span></div><div class="vb"><div class="vbg"><div class="vbl">Views</div><div class="vbt"><div class="vbf" style="width:'+Math.round(x.views/maxV*100)+'%;background:#E1306C"></div></div><div class="vbv">'+fmt(x.views)+'</div></div><div class="vbg"><div class="vbl">ER</div><div class="vbt"><div class="vbf" style="width:'+Math.round(Math.min(er/15,1)*100)+'%;background:'+ec+'"></div></div><div class="vbv" style="color:'+ec+'">'+er.toFixed(1)+'%</div></div><div class="vbg"><div class="vbl">Saves</div><div class="vbt"><div class="vbf" style="width:'+Math.round(Math.min(x.sv/5506,1)*100)+'%;background:var(--am)"></div></div><div class="vbv">'+fmt(x.sv)+'</div></div></div><div class="vt">'+str.map(function(s){return'<span class="chip" style="background:rgba(0,214,143,.12);color:#60e0b4">'+s+'</span>'}).join('')+wk.map(function(w){return'<span class="chip" style="background:rgba(255,77,77,.12);color:#ff9090">'+w+'</span>'}).join('')+'</div></div></div>';
+  }).join('');
+}
+function rIGSc(){
+  var scores=[{s:85,c:'#E1306C',t:'Reach & views',sub:'700K-1.85M per konten terbaik'},{s:88,c:'var(--gn)',t:'Engagement quality',sub:'ER 6.58% Feed jauh di atas benchmark'},{s:30,c:'var(--rd)',t:'Konversi ke toko',sub:'Stories nol saves tidak dikaptalisasi'},{s:60,c:'var(--am)',t:'Optimasi format',sub:'63% Reels padahal Feed 3x lebih kuat'},{s:80,c:'var(--pu)',t:'Konsistensi posting',sub:'3-4 konten/hari stabil 28 hari'}];
+  document.getElementById('ig-sc2').innerHTML=scores.map(function(s){var dash=2*Math.PI*22*(1-s.s/100);return'<div class="sc"><div class="sr"><svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/><circle cx="28" cy="28" r="22" fill="none" stroke="'+s.c+'" stroke-width="5" stroke-dasharray="'+2*Math.PI*22+'" stroke-dashoffset="'+dash+'" stroke-linecap="round"/></svg><div class="sv">'+s.s+'</div></div><div class="sc-t">'+s.t+'</div><div class="sc-s">'+s.sub+'</div></div>'}).join('');
+}
+function rIG(){
+  var r=fIG(),d=r.d,p=r.p;
+  rIGKPI(d);rIGFn(p);rIGSg(d,p);rIGTbl(p);rIGAc(p);rIGSc();
+  var cfg=IGM[igM]||['#E1306C','Views'],isEr=igM==='er';
+  var data=isEr?d.map(function(x){return x.reach?((x.likes+x.comments+x.shares+x.saves)/x.reach*100):0}):d.map(function(x){return x[igM]||0});
+  if(igCh)igCh.destroy();
+  igCh=mkCh(document.getElementById('ig-ch').getContext('2d'),d.map(function(x){return x.date.slice(5)}),data,cfg[0],cfg[1],isEr);
+}
+
+// ── DATE ─────────────────────────────────────────────────────────────────────
+function setP(days,btn){
+  if(!TTD.length){return;} // data belum siap, abaikan klik
+  document.querySelectorAll('.pbt').forEach(function(b){b.classList.remove('on');b.style.background='';b.style.borderColor=''});
+  btn.classList.add('on');
+  var ac=plat==='tt'?'#ff2d55':'#E1306C';
+  btn.style.background=ac;btn.style.borderColor=ac;
+  var all=TTD.map(function(x){return x.date}).sort(),last=all[all.length-1];
+  var d=new Date(last);d.setDate(d.getDate()-days+1);
+  dFrom=d.toISOString().slice(0,10);dTo=last;
+  document.getElementById('df').value=dFrom;document.getElementById('dt').value=dTo;
+  document.getElementById('dl').textContent=days+' hari terakhir';
+  if(plat==='tt')rTT();else rIG();
+}
+function applyC(){
+  var f=document.getElementById('df').value,t=document.getElementById('dt').value;
+  if(f&&t){dFrom=f;dTo=t;document.querySelectorAll('.pbt').forEach(function(b){b.classList.remove('on')});document.getElementById('dl').textContent=f+' – '+t;if(plat==='tt')rTT();else rIG();}
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+loadLiveData();
+</script>
+</body>
+</html>
